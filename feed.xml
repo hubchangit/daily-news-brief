@@ -1,33 +1,34 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>香港每日新聞 (HK Daily)</title>
+    <title>阿發講新聞 (Ah Fa Daily)</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily AI-generated news briefing in Cantonese.</description>
+    <description>Daily sarcastic news briefing in Cantonese.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Sun, 04 Jan 2026 13:31:36 +0000</lastBuildDate>
-    <itunes:author>AI News Bot</itunes:author>
-    <managingEditor>news@example.com (AI News Bot)</managingEditor>
-    <pubDate>Sun, 04 Jan 2026 13:31:36 +0000</pubDate>
+    <lastBuildDate>Sun, 04 Jan 2026 13:56:07 +0000</lastBuildDate>
+    <itunes:author>Ah Fa</itunes:author>
+    <managingEditor>news@example.com (Ah Fa)</managingEditor>
+    <pubDate>Sun, 04 Jan 2026 13:56:07 +0000</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
-      <itunes:name>My News Bot</itunes:name>
+      <itunes:name>Ah Fa</itunes:name>
       <itunes:email>news@example.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>新聞簡報: 2026-01-04</title>
-      <description><![CDATA[各位早晨，今日係 01月04日，以下係今日嘅新聞重點。
+      <title>阿發簡報: 2026-01-04</title>
+      <description><![CDATA[喂各位早晨！又係我阿發講新聞時間。今日 01月04日，睇下個世界發生咩事。
 
-深水埗民政處等續為石硤尾邨火警受影響居民提供協助：石硤尾邨美如樓早上發生火警，造成1死8傷。民政事務總署表示，深水埗民政處會繼續聯同政府部門、...]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/daily_brief.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/daily_brief.mp3" length="4000000" type="audio/mpeg"/>
-      <pubDate>Sun, 04 Jan 2026 13:31:36 +0000</pubDate>
+【香港新聞】
+深水埗民政處等續為石硤尾邨火警受影響居民提供協助：石硤尾邨美如樓早上發生火警，造成1死8傷。民政事務總署表示...]]></description>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3" length="4000000" type="audio/mpeg"/>
+      <pubDate>Sun, 04 Jan 2026 13:56:07 +0000</pubDate>
     </item>
   </channel>
 </rss>

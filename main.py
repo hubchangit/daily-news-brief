@@ -100,8 +100,7 @@ def update_rss(audio_filename, episode_text):
         language="zh-hk",
         authors=[Person("Ah Fa", "news@example.com")],
         owner=Person("Ah Fa", "news@example.com"),
-        category=Category("Comedy", "News"), # Changed category to Comedy
-    )
+    category=Category("News", "Daily News"), # FIXED
     
     today_str = datetime.now().strftime('%Y-%m-%d')
     p.add_episode(Episode(

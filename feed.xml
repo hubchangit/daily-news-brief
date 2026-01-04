@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Sun, 04 Jan 2026 13:56:07 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jan 2026 14:09:42 +0000</lastBuildDate>
     <itunes:author>Ah Fa</itunes:author>
     <managingEditor>news@example.com (Ah Fa)</managingEditor>
-    <pubDate>Sun, 04 Jan 2026 13:56:07 +0000</pubDate>
+    <pubDate>Sun, 04 Jan 2026 14:09:42 +0000</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
@@ -28,7 +28,7 @@
 深水埗民政處等續為石硤尾邨火警受影響居民提供協助：石硤尾邨美如樓早上發生火警，造成1死8傷。民政事務總署表示...]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3" length="4000000" type="audio/mpeg"/>
-      <pubDate>Sun, 04 Jan 2026 13:56:07 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 14:09:42 +0000</pubDate>
     </item>
   </channel>
 </rss>

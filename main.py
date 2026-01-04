@@ -8,13 +8,16 @@ from huggingface_hub import InferenceClient
 
 # 1. SETUP
 # -----------------------------
-# Use Qwen for best Cantonese. If it fails, it will print an error.
+# Qwen is the best for Cantonese slang and humor.
 REPO_ID = "Qwen/Qwen2.5-72B-Instruct" 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
+# MIXED SOURCES: HK Local + Global
 FEEDS = [
-    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",      
-    "https://www.hk01.com/rss"                                     
+    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",      # HK News (RTHK)
+    "https://www.hk01.com/rss",                                    # HK News (HK01)
+    "https://feeds.bbci.co.uk/news/world/rss.xml",                 # Global (BBC)
+    "https://www.theverge.com/rss/index.xml"                       # Tech/Global (The Verge - good for fun news)
 ]
 
 # 2. FETCH NEWS
@@ -24,32 +27,38 @@ def get_news():
     for url in FEEDS:
         try:
             feed = feedparser.parse(url)
-            for item in feed.entries[:3]:
+            # Get top 2 items from each feed to keep it diverse but short
+            for item in feed.entries[:2]:
                 clean_desc = item.description.replace('<br>', ' ').replace('\n', ' ')[:150]
-                full_text += f"- {item.title}: {clean_desc}\n"
+                # Label the source so the AI knows where it came from
+                source_name = "Global News" if "bbc" in url or "verge" in url else "HK News"
+                full_text += f"[{source_name}] {item.title}: {clean_desc}\n"
         except Exception as e:
             print(f"Error reading feed {url}: {e}")
     return full_text
 
-# 3. AI SCRIPT WRITING (CANTONESE)
+# 3. AI SCRIPT WRITING (FUNNY MODE)
 # -----------------------------
 def write_script(raw_news):
     client = InferenceClient(token=HF_TOKEN)
     
+    # THE SECRET SAUCE: A highly specific "Persona" prompt
     prompt = f"""
-    You are a professional Hong Kong news anchor. 
-    Summarize the following news headlines into a smooth, spoken Cantonese broadcast script (Traditional Chinese).
+    You are "Ah-Fa" (阿發), a witty, sarcastic, and energetic Hong Kong YouTuber/Podcaster.
+    You are NOT a boring news anchor. You are chatting with friends.
     
-    Guidelines:
-    1. Language: Cantonese (Written as spoken text, e.g., using "嘅", "係", "今日").
-    2. Tone: Professional, clear, and concise.
-    3. Structure: 
-       - Start with: "各位早晨，今日係 {datetime.now().strftime('%m月%d日')}，以下係今日嘅新聞重點。"
-       - Group Hong Kong news first, then other news.
-       - End with: "新聞報道完畢，祝大家有美好嘅一日。"
-    4. NO Markdown, NO asterisks (*). Just pure text.
+    Instructions:
+    1. **Language:** Use very colloquial Cantonese (Oral/Spoken). Use slang like "爆單嘢", "搞錯", "痴線", "食花生".
+    2. **Tone:** High energy, slightly funny, maybe a little bit mean/sarcastic if the news is stupid. 
+    3. **Content:** Summarize the news, but add your own 1-sentence reaction to each story.
+    4. **Structure:**
+       - Start: "喂各位早晨！又係我阿發講新聞時間。今日 {datetime.now().strftime('%m月%d日')}，睇下個世界發生咩事。"
+       - Part 1: Talk about Hong Kong news first.
+       - Part 2: "轉頭睇下國際新聞..." (Switch to Global/BBC news).
+       - End: "好啦，講完收工！記得飲多杯水呀，拜拜！"
+    5. **Format:** Pure text only. No emojis (TTS can't read them). No markdown.
 
-    News Items:
+    Here is the boring raw news (Spice it up!):
     {raw_news}
     """
     
@@ -57,19 +66,20 @@ def write_script(raw_news):
         response = client.chat_completion(
             model=REPO_ID,
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=1000,
-            temperature=0.7
+            max_tokens=1500, # Increased length for jokes
+            temperature=0.85 # Higher temperature = More creativity/randomness
         )
         return response.choices[0].message.content
     except Exception as e:
         print(f"AI Error: {e}")
-        return "各位早晨，AI 生成發生錯誤，請直接查看標題。"
+        return "各位早晨，阿發今日個腦實左少少，讀住標題先啦。"
 
-# 4. TEXT TO SPEECH (HK VOICE)
+# 4. TEXT TO SPEECH (FASTER & ENERGETIC)
 # -----------------------------
 async def generate_audio(text, filename):
-    # zh-HK-HiuGaaiNeural is the best Cantonese voice
-    communicate = edge_tts.Communicate(text, "zh-HK-HiuGaaiNeural")
+    # We use 'rate=+10%' to make it sound faster and less "droning"
+    # zh-HK-HiuGaaiNeural is the most expressive voice.
+    communicate = edge_tts.Communicate(text, "zh-HK-HiuGaaiNeural", rate="+10%")
     await communicate.save(filename)
 
 # 5. GENERATE PODCAST FEED
@@ -81,47 +91,41 @@ def update_rss(audio_filename, episode_text):
     else:
         base_url = "http://localhost"
 
-    # Create the Podcast Feed
     p = Podcast(
-        name="香港每日新聞 (HK Daily)",
-        description="Daily AI-generated news briefing in Cantonese.",
+        name="阿發講新聞 (Ah Fa Daily)", # Rebranded!
+        description="Daily sarcastic news briefing in Cantonese.",
         website=base_url,
-        explicit=False,
+        explicit=False, # Set to True if you want it to swear!
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
         language="zh-hk",
-        authors=[Person("AI News Bot", "news@example.com")],
-        owner=Person("My News Bot", "news@example.com"),
-        category=Category("News", "Daily News"),
+        authors=[Person("Ah Fa", "news@example.com")],
+        owner=Person("Ah Fa", "news@example.com"),
+        category=Category("Comedy", "News"), # Changed category to Comedy
     )
     
-    # Add the NEW episode
     today_str = datetime.now().strftime('%Y-%m-%d')
     p.add_episode(Episode(
-        title=f"新聞簡報: {today_str}",
+        title=f"阿發簡報: {today_str}",
         media=Media(f"{base_url}/{audio_filename}", 4000000, type="audio/mpeg"),
         summary=episode_text[:100] + "...",
         publication_date=datetime.now().astimezone(),
     ))
     
-    # IMPORTANT: We need to keep old episodes? 
-    # For now, this simple script only shows the LATEST episode to keep it simple.
-    # To keep history, we would need to read the existing feed.xml first.
-    
     p.rss_file('feed.xml')
 
 # MAIN EXECUTION
 if __name__ == "__main__":
-    # 1. Generate Unique Filename (Fixes Caching)
+    # Unique filename
     date_str = datetime.now().strftime('%Y%m%d')
     mp3_filename = f"brief_{date_str}.mp3"
     
-    print("Fetching Chinese news...")
+    print("Fetching Global & HK news...")
     raw_news = get_news()
     
-    print("Writing Cantonese script...")
+    print("Writing Witty Script...")
     script = write_script(raw_news)
     
-    print(f"Generating Audio: {mp3_filename}...")
+    print(f"Generating Audio (Fast Mode)...")
     asyncio.run(generate_audio(script, mp3_filename))
     
     print("Updating RSS...")

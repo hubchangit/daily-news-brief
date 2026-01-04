@@ -1,18 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>HK Daily Brief</title>
+    <title>香港每日新聞 (HK Daily)</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily AI-generated news for Hong Kong.</description>
+    <description>Daily AI-generated news briefing in Cantonese.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
-    <language>en</language>
-    <lastBuildDate>Sun, 04 Jan 2026 13:20:50 +0000</lastBuildDate>
+    <language>zh-hk</language>
+    <lastBuildDate>Sun, 04 Jan 2026 13:31:36 +0000</lastBuildDate>
     <itunes:author>AI News Bot</itunes:author>
     <managingEditor>news@example.com (AI News Bot)</managingEditor>
-    <pubDate>Sun, 04 Jan 2026 13:20:50 +0000</pubDate>
-    <itunes:block>Yes</itunes:block>
+    <pubDate>Sun, 04 Jan 2026 13:31:36 +0000</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
@@ -22,11 +21,13 @@
       <itunes:email>news@example.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>Briefing: 2026-01-04</title>
-      <description><![CDATA[Good morning. Here are the headlines. - Police arrest three in Yuen Long drug bust: Police said on Sunday they would lay holding charges against three people, aged between 21 and 35, on suspicion of m...]]></description>
+      <title>新聞簡報: 2026-01-04</title>
+      <description><![CDATA[各位早晨，今日係 01月04日，以下係今日嘅新聞重點。
+
+深水埗民政處等續為石硤尾邨火警受影響居民提供協助：石硤尾邨美如樓早上發生火警，造成1死8傷。民政事務總署表示，深水埗民政處會繼續聯同政府部門、...]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/daily_brief.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/daily_brief.mp3" length="4000000" type="audio/mpeg"/>
-      <pubDate>Sun, 04 Jan 2026 13:20:50 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 13:31:36 +0000</pubDate>
     </item>
   </channel>
 </rss>

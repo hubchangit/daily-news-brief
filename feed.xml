@@ -3,15 +3,15 @@
   <channel>
     <title>電車少女 (Tram Girl)</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>A daily, relaxing news deep dive in Cantonese. (Global &amp; Local)</description>
+    <description>Daily HK &amp; Global news deep dive with weather updates.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Sun, 04 Jan 2026 14:57:36 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jan 2026 15:10:02 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@example.com (Tram Girl)</managingEditor>
-    <pubDate>Sun, 04 Jan 2026 14:57:36 +0000</pubDate>
+    <pubDate>Sun, 04 Jan 2026 15:10:02 +0000</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
@@ -22,11 +22,10 @@
     </itunes:owner>
     <item>
       <title>電車日記: 2026-01-04</title>
-      <description><![CDATA[哈囉大家好，今日係 1月4日，歡迎收聽電車少女的節目。今集我哋會帶大家深入了解一下最近發生嘅香港同國際大事。
-首先，我哋來關注一下石硤尾邨火警事件。石硤尾邨美如樓喺早上發生咗一場火警，導致一人死亡，八人受傷。民政事務總署表示，深水埗民政處會繼續聯同政府部門、區議員及關愛隊，持續為受影響居民提供協助。...]]></description>
+      <description><![CDATA[哈囉大家好，今日係 1月4日，歡迎收聽電車少女嘅節目。今早先同大家分享下天氣情況，東北季候風正影響廣東，本港地區今晚及明日大致天晴，市區最低氣溫約15度，新界再低幾度，日間乾燥，最高氣溫約22度。吹和緩東北風，明日漸轉吹和緩至清勁偏北風。隨後兩三日早上市區最低氣溫在12、13度左右，新界再低幾度，天...]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Sun, 04 Jan 2026 14:57:36 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 15:10:02 +0000</pubDate>
     </item>
   </channel>
 </rss>

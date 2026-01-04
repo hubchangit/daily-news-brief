@@ -1,0 +1,3 @@
+- name: Install dependencies
+        run: |
+          pip install feedparser huggingface_hub edge-tts podgen

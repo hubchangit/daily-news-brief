@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Sun, 04 Jan 2026 14:41:48 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 04 Jan 2026 14:57:36 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@example.com (Tram Girl)</managingEditor>
-    <pubDate>Sun, 04 Jan 2026 14:41:48 +0000</pubDate>
+    <pubDate>Sun, 04 Jan 2026 14:57:36 +0000</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
@@ -21,16 +21,12 @@
       <itunes:email>news@example.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>電車日記 (加長版): 2026-01-04</title>
-      <description><![CDATA[### 電車少女 Podcast
-
-#### Intro
-大家好，我是電車少女，歡迎收聽今天的節目。今日係 X月X日，天氣唔錯，應該係晴朗嘅一天。希望你哋都好靚嘅心情嚟到呢個節目。今日我哋會深入探討幾則重要嘅香港及國際新聞，仲會有幾個快速提提嘅小新聞。講開又講，希望你哋會鍾意呢個詳盡版。
-
-####...]]></description>
+      <title>電車日記: 2026-01-04</title>
+      <description><![CDATA[哈囉大家好，今日係 1月4日，歡迎收聽電車少女的節目。今集我哋會帶大家深入了解一下最近發生嘅香港同國際大事。
+首先，我哋來關注一下石硤尾邨火警事件。石硤尾邨美如樓喺早上發生咗一場火警，導致一人死亡，八人受傷。民政事務總署表示，深水埗民政處會繼續聯同政府部門、區議員及關愛隊，持續為受影響居民提供協助。...]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260104.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Sun, 04 Jan 2026 14:41:48 +0000</pubDate>
+      <pubDate>Sun, 04 Jan 2026 14:57:36 +0000</pubDate>
     </item>
   </channel>
 </rss>

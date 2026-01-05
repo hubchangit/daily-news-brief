@@ -17,7 +17,7 @@ HKT = timezone(timedelta(hours=8))
 
 # VOICES
 VOICE_FEMALE = "zh-HK-HiuGaaiNeural" # Tram Girl
-VOICE_MALE = "zh-HK-WanLungNeural"   # Dekisugi (Young, smart male voice)
+VOICE_MALE = "zh-HK-WanLungNeural"   # Dekisugi
 
 # NEWS SOURCES
 FEEDS_HK = [
@@ -36,7 +36,6 @@ WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 # 2. AUDIO PROCESSING ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # Both speakers at 1.25x speed for snappy "Radio" feel
     communicate = edge_tts.Communicate(text, voice, rate="+25%")
     await communicate.save(filename)
 
@@ -47,46 +46,65 @@ async def generate_dialogue_audio(script_text, output_file):
     combined_audio = AudioSegment.empty()
     temp_files = []
     
+    valid_audio_count = 0
+
     for i, line in enumerate(lines):
         line = line.strip()
         if not line: continue
         
         # Determine speaker
-        if line.startswith("Dekisugi:"):
+        if "Dekisugi:" in line:
             voice = VOICE_MALE
             text = line.replace("Dekisugi:", "").strip()
         else:
             voice = VOICE_FEMALE
             text = line.replace("Girl:", "").strip()
         
-        if not text: continue
+        # Remove symbols that might crash TTS
+        text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!]', '', text)
+        
+        if not text or len(text) < 2: continue
 
         temp_filename = f"temp_line_{i}.mp3"
-        await generate_line(text, voice, temp_filename)
         
-        segment = AudioSegment.from_mp3(temp_filename)
-        combined_audio += segment
-        combined_audio += AudioSegment.silent(duration=300)
-        temp_files.append(temp_filename)
+        # SAFETY BLOCK
+        try:
+            print(f"Speaking ({voice}): {text[:15]}...")
+            await generate_line(text, voice, temp_filename)
+            
+            if os.path.exists(temp_filename) and os.path.getsize(temp_filename) > 0:
+                segment = AudioSegment.from_mp3(temp_filename)
+                combined_audio += segment
+                combined_audio += AudioSegment.silent(duration=300)
+                temp_files.append(temp_filename)
+                valid_audio_count += 1
+
+        except Exception as e:
+            print(f"⚠️ Line skipped due to error: {e}")
+            continue
     
+    if valid_audio_count == 0:
+        raise Exception("No valid audio was generated!")
+
     combined_audio.export(output_file, format="mp3")
     
+    # Clean up immediately
     for f in temp_files:
         if os.path.exists(f): os.remove(f)
 
 def mix_music(voice_file, output_file):
     print("Mixing with Music...")
+    bgm_path = "bgm.mp3"
     
-    has_music = os.path.exists("bgm.mp3") and os.path.getsize("bgm.mp3") > 1024
-
-    if not has_music:
+    if not os.path.exists(bgm_path):
+        print("Music missing. Using voice only.")
         if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
         return
 
     try:
         voice = AudioSegment.from_mp3(voice_file)
-        bgm = AudioSegment.from_mp3("bgm.mp3")
+        bgm = AudioSegment.from_mp3(bgm_path)
         bgm = bgm - 23 
         
         looped_bgm = bgm * (len(voice) // len(bgm) + 1)
@@ -99,9 +117,40 @@ def mix_music(voice_file, output_file):
             
     except Exception as e:
         print(f"Mixing failed: {e}")
+        if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
 
-# 3. CONTENT & SCRIPT
+# 3. SUPER JANITOR
+# -----------------------------
+def run_super_janitor():
+    print("🧹 Super Janitor starting...")
+    
+    # 1. Define Today's File (DO NOT DELETE THIS)
+    now_hk = datetime.now(HKT)
+    todays_filename = f"brief_{now_hk.strftime('%Y%m%d')}.mp3"
+    
+    # 2. Delete ALL old episodes
+    # Any file starting with "brief_" that is NOT today's file
+    all_briefs = glob.glob("brief_*.mp3")
+    for f in all_briefs:
+        if f != todays_filename:
+            print(f"   🗑️ Deleting old episode: {f}")
+            try:
+                os.remove(f)
+            except: pass
+            
+    # 3. Delete Leftover Temp Files from crashed runs
+    # (temp_line_*, temp_voice.mp3, dialogue_raw.mp3)
+    junk_patterns = ["temp_line_*.mp3", "temp_voice.mp3", "dialogue_raw.mp3"]
+    for pattern in junk_patterns:
+        junk = glob.glob(pattern)
+        for j in junk:
+            print(f"   🗑️ Cleaning junk: {j}")
+            try:
+                os.remove(j)
+            except: pass
+
+# 4. CONTENT GENERATION
 # -----------------------------
 def get_weather():
     try:
@@ -126,55 +175,38 @@ def get_feeds_content(urls, limit=4):
         except: pass
     return content
 
-def get_natural_date():
-    now = datetime.now(HKT)
-    return f"{now.month}月{now.day}日"
-
 def write_script(hk_news, global_news, weather):
     client = InferenceClient(token=HF_TOKEN)
-    date_speak = get_natural_date()
+    now = datetime.now(HKT)
+    date_speak = f"{now.month}月{now.day}日"
     
     prompt = f"""
     You are writing a script for a HK News Podcast.
     
     **Characters:**
-    1. **Girl:** (Host) Energetic, curious, asks questions.
-    2. **Dekisugi:** (出木杉 - Co-host) Young, highly intelligent, calm, and analytical. 
-       - He sounds like a top student or a young expert.
-       - He explains complex news simply and logically.
-       - He is polite but very sharp.
+    1. **Girl:** (Host) Energetic, curious.
+    2. **Dekisugi:** (出木杉) Young, highly intelligent, calm, analytical. 
 
-    **LANGUAGE RULES (CRITICAL):**
-    - You MUST use **Cantonese Colloquialism (廣東話口語)**.
-    - NEVER use "的", use "嘅".
-    - NEVER use "是", use "係".
-    - NEVER use "他", use "佢".
-    - NEVER use "什麼", use "咩".
-    - Make it sound like two young HK people chatting naturally.
+    **LANGUAGE RULES:**
+    - USE **Cantonese Colloquialism (廣東話口語)**.
+    - "的" -> "嘅", "是" -> "係", "他" -> "佢".
+    - Tone: Natural chat between two young people.
 
-    **Format Rule:**
-    - Start lines with "Girl:" or "Dekisugi:".
-    - Separate lines with "|".
+    **Format:**
+    - "Girl:" or "Dekisugi:".
+    - Separator: "|".
     - No newlines.
 
-    **Show Flow:**
-    1. **Intro:** Girl greets. Dekisugi gives a polite, smart greeting.
-    2. **Weather:** Girl reads. Dekisugi analyzes (e.g., "The humidity implies we should...").
-    3. **HK News (4 items):** Girl reads. Dekisugi adds logical analysis or context.
-    4. **Global News (4 items):** Girl reads. Dekisugi explains the global impact.
-    5. **English Corner:** Girl teaches a phrase. Dekisugi explains its origin or proper grammatical usage perfectly.
-    6. **Outro:** Smart sign-off.
-
-    **Data:**
-    Date: {date_speak}
-    Weather: {weather}
-    HK News: 
-    {hk_news}
-    Global News: 
-    {global_news}
+    **Flow:**
+    1. **Intro:** Greetings.
+    2. **Weather:** {weather}.
+    3. **HK News:** {hk_news}.
+    4. **Global News:** {global_news}.
+    5. **English Corner:** Teach a phrase.
+    6. **Outro.**
 
     **Example:**
-    Girl: 哇，今日個市跌得好勁呀！ | Dekisugi: 其實係受外圍因素影響嘅，投資者唔洗太過恐慌，基本面仲係好穩健。
+    Girl: 哇，今日好濕呀！ | Dekisugi: 係呀，濕度高達90%，記得開抽濕機。
     """
     
     try:
@@ -183,26 +215,25 @@ def write_script(hk_news, global_news, weather):
             messages=[{"role": "user", "content": prompt}],
             max_tokens=4500, temperature=0.7
         )
-        content = response.choices[0].message.content
-        return content.replace("\n", " ")
+        return response.choices[0].message.content.replace("\n", " ")
     except Exception as e:
         print(f"AI Error: {e}")
-        return "Girl: Error generating script. | Dekisugi: System malfunction."
-
-# 4. MAIN FLOW
-# -----------------------------
-def cleanup_old_files():
-    files = sorted(glob.glob("brief_*.mp3"))
-    if len(files) > 3:
-        for f in files[:-3]: os.remove(f)
+        return "Girl: Error. | Dekisugi: System fail."
 
 def update_rss(audio_filename, episode_text):
     repo_name = os.environ.get("GITHUB_REPOSITORY", "local/test")
-    base_url = f"https://{repo_name.split('/')[0]}.github.io/{repo_name.split('/')[1]}"
+    # Safety fallback
+    if not repo_name: repo_name = "local/test"
+    
+    parts = repo_name.split('/')
+    if len(parts) >= 2:
+        base_url = f"https://{parts[0]}.github.io/{parts[1]}"
+    else:
+        base_url = "https://example.com"
 
     p = Podcast(
         name="電車少女 vs 出木杉",
-        description="Daily News. Energetic Host vs The Smart Analyst.",
+        description="Daily HK News Analysis.",
         website=base_url,
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
@@ -213,7 +244,6 @@ def update_rss(audio_filename, episode_text):
     )
     
     now_hk = datetime.now(HKT)
-    # Update RSS summary format
     summary_clean = episode_text.replace("|", "\n\n").replace("Girl:", "👧").replace("Dekisugi:", "🤓")[:500] + "..."
     
     p.add_episode(Episode(
@@ -224,12 +254,14 @@ def update_rss(audio_filename, episode_text):
     ))
     p.rss_file('feed.xml')
 
+# 5. MAIN
+# -----------------------------
 if __name__ == "__main__":
-    cleanup_old_files()
+    # RUN JANITOR FIRST
+    run_super_janitor()
 
     now_hk = datetime.now(HKT)
-    date_str = now_hk.strftime('%Y%m%d')
-    final_mp3 = f"brief_{date_str}.mp3"
+    final_mp3 = f"brief_{now_hk.strftime('%Y%m%d')}.mp3"
     temp_voice = "dialogue_raw.mp3"
     
     print("Fetching content...")
@@ -237,18 +269,20 @@ if __name__ == "__main__":
     hk_news = get_feeds_content(FEEDS_HK, limit=4)
     global_news = get_feeds_content(FEEDS_GLOBAL, limit=4)
     
-    print("Writing script (Colloquial Cantonese)...")
+    print("Writing script...")
     script = write_script(hk_news, global_news, weather)
-    
-    if "|" not in script:
-        script = f"Girl: {script}"
+    if "|" not in script: script = f"Girl: {script}"
 
-    print("Generating Dialogue Voice...")
-    asyncio.run(generate_dialogue_audio(script, temp_voice))
-    
-    print("Mixing with Music...")
-    mix_music(temp_voice, final_mp3)
-    
-    print("Updating RSS...")
-    update_rss(final_mp3, script)
-    print("Done!")
+    try:
+        print("Generating Voice...")
+        asyncio.run(generate_dialogue_audio(script, temp_voice))
+        
+        print("Mixing...")
+        mix_music(temp_voice, final_mp3)
+        
+        print("Updating RSS...")
+        update_rss(final_mp3, script)
+        print("Done!")
+    except Exception as e:
+        print(f"CRITICAL ERROR: {e}")
+        exit(1)

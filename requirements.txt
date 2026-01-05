@@ -1,0 +1,6 @@
+feedparser
+edge-tts
+podgen
+huggingface_hub
+pydub
+requests

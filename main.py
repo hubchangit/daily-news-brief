@@ -3,7 +3,8 @@ import os
 import asyncio
 import edge_tts
 import re
-from datetime import datetime
+import glob
+from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
 from huggingface_hub import InferenceClient
 
@@ -12,132 +13,117 @@ from huggingface_hub import InferenceClient
 REPO_ID = "Qwen/Qwen2.5-72B-Instruct" 
 HF_TOKEN = os.environ.get("HF_TOKEN")
 
-# NEWS SOURCES (Updated)
-FEEDS = [
-    # HK Local
-    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",      # RTHK (Chinese)
-    "https://www.scmp.com/rss/2/feed",                             # SCMP (HK/English)
-    
-    # Global
-    "https://feeds.bbci.co.uk/news/world/rss.xml",                 # BBC World
-    "https://www.theguardian.com/world/rss"                        # The Guardian
-]
+# DEFINING HONG KONG TIME (UTC+8)
+HKT = timezone(timedelta(hours=8))
 
-# WEATHER SOURCE (HK Observatory)
+FEEDS = [
+    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",      # HK News
+    "https://www.scmp.com/rss/2/feed",                             # HK English
+    "https://feeds.bbci.co.uk/news/world/rss.xml",                 # BBC
+    "https://www.theguardian.com/world/rss"                        # Guardian
+]
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
-# 2. FETCH WEATHER
+# 2. JANITOR: DELETE OLD FILES
+# -----------------------------
+def cleanup_old_files():
+    # Find all mp3 files starting with "brief_"
+    files = sorted(glob.glob("brief_*.mp3"))
+    
+    # If we have more than 3 files, delete the oldest ones
+    if len(files) > 3:
+        for f in files[:-3]: # Keep the last 3, delete the rest
+            try:
+                os.remove(f)
+                print(f"cleaned up old episode: {f}")
+            except Exception as e:
+                print(f"Could not delete {f}: {e}")
+
+# 3. FETCH DATA
 # -----------------------------
 def get_weather():
     try:
         feed = feedparser.parse(WEATHER_URL)
-        # HKO RSS usually puts the forecast in the description of the first item
         if feed.entries:
-            # Clean up the HTML tags (HKO includes <br> often)
-            raw_weather = feed.entries[0].description
-            clean_weather = raw_weather.replace('<br/>', ' ').replace('\n', ' ')
-            return clean_weather[:300] # Keep it concise
-    except Exception as e:
-        print(f"Error fetching weather: {e}")
-    return "Weather data unavailable."
+            raw = feed.entries[0].description
+            return raw.replace('<br/>', ' ').replace('\n', ' ')[:300]
+    except:
+        return "Weather unavailable."
 
-# 3. FETCH NEWS
-# -----------------------------
 def get_news():
     full_text = ""
     for url in FEEDS:
         try:
             feed = feedparser.parse(url)
-            # Take top 3 items from each source (3x4 = ~12 stories total)
             for item in feed.entries[:3]:
                 clean_desc = item.description.replace('<br>', ' ').replace('\n', ' ')[:250]
-                
-                # Tag the source clearly for the AI
-                if "scmp" in url or "rthk" in url:
-                    source_tag = "HK News"
-                else:
-                    source_tag = "Global News"
-                
-                full_text += f"[{source_tag} - {feed.feed.title}] {item.title}: {clean_desc}\n"
+                tag = "HK News" if "scmp" in url or "rthk" in url else "Global News"
+                full_text += f"[{tag}] {item.title}: {clean_desc}\n"
         except Exception as e:
-            print(f"Error reading feed {url}: {e}")
+            print(f"Error {url}: {e}")
     return full_text
 
-# 4. HELPER: CLEAN TEXT & FIX DATE
+# 4. SCRIPT & AUDIO
 # -----------------------------
 def clean_script_for_speech(text):
-    # Remove Markdown (*, #, _, ~)
     text = re.sub(r'[*#_`~]', '', text)
-    # Remove links
     text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
-    # Collapse spaces
-    text = re.sub(r'\n+', '\n', text).strip()
-    return text
+    return re.sub(r'\n+', '\n', text).strip()
 
 def get_natural_date():
-    # Returns "1月5日" (One Month Five Day)
-    now = datetime.now()
+    # Use HK Time for the spoken date
+    now = datetime.now(HKT)
     return f"{now.month}月{now.day}日"
 
-# 5. AI SCRIPT WRITING
-# -----------------------------
-def write_script(raw_news, weather_report):
+def write_script(raw_news, weather):
     client = InferenceClient(token=HF_TOKEN)
-    natural_date = get_natural_date()
+    date_speak = get_natural_date()
     
     prompt = f"""
-    You are "Tram Girl" (電車少女), a friendly HK podcaster.
+    You are "Tram Girl" (電車少女). Write a 5-7 minute news script in Cantonese.
     
-    **Goal:** Write a **5-7 minute** deep-dive news script in Cantonese.
+    Current Date: {date_speak}
+    Weather: {weather}
     
-    **CRITICAL RULES:**
-    1. **NO MARKDOWN:** No bold (**), no headers (###). Pure text only.
-    2. **Language:** FULL Cantonese (Colloquial). Hong Kong spoken language. Translate ALL English news (Guardian/BBC/SCMP) into natural Cantonese.
-    3. **Date:** Read as "{natural_date}".
-    
-    **Structure:**
-    1. **Intro:** "哈囉大家好，今日係 {natural_date}..."
-    2. **Weather Report:** Use this real data: "{weather_report}". (Summarize it: e.g., " ，上午較爲清涼，氣溫為xx度至xx度。有/沒有需要帶雨傘")
-    3. **HK News Deep Dive:** Discuss the RTHK and SCMP stories.
-    4. **Global News Deep Dive:** Discuss the BBC and Guardian stories.
-    5. **Outro:** "今日嘅新聞係咁多，我地聼日見！"
-    
-    **Raw News Data:**
+    Rules:
+    1. NO MARKDOWN. Plain text only.
+    2. Translate ALL English news to Cantonese.
+    3. Tone: Casual, friendly deep-dive.
+    4. Structure:
+       - Intro: "哈囉大家好，今日係 {date_speak}..."
+       - Weather Summary.
+       - HK News Deep Dive.
+       - Global News Deep Dive.
+       - Outro.
+
+    News:
     {raw_news}
     """
-    
     try:
         response = client.chat_completion(
-            model=REPO_ID,
+            model=REPO_ID, 
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=3500, 
-            temperature=0.7
+            max_tokens=3500, temperature=0.7
         )
         return response.choices[0].message.content
     except Exception as e:
         print(f"AI Error: {e}")
-        return "Sorry, AI generation failed."
+        return "Error generating script."
 
-# 6. TEXT TO SPEECH (1.5x SPEED)
-# -----------------------------
 async def generate_audio(text, filename):
-    clean_text = clean_script_for_speech(text)
-    # Speed increased to +50%
-    communicate = edge_tts.Communicate(clean_text, "zh-HK-HiuGaaiNeural", rate="+50%") 
+    clean = clean_script_for_speech(text)
+    communicate = edge_tts.Communicate(clean, "zh-HK-HiuGaaiNeural", rate="+50%")
     await communicate.save(filename)
 
-# 7. GENERATE PODCAST FEED
+# 5. RSS UPDATE
 # -----------------------------
 def update_rss(audio_filename, episode_text):
-    repo_name = os.environ.get("GITHUB_REPOSITORY")
-    if repo_name:
-        base_url = f"https://{repo_name.split('/')[0]}.github.io/{repo_name.split('/')[1]}"
-    else:
-        base_url = "http://localhost"
+    repo_name = os.environ.get("GITHUB_REPOSITORY", "local/test")
+    base_url = f"https://{repo_name.split('/')[0]}.github.io/{repo_name.split('/')[1]}"
 
     p = Podcast(
         name="電車少女 (Tram Girl)",
-        description="Daily HK & Global news deep dive with weather updates.",
+        description="Daily HK & Global news deep dive.",
         website=base_url,
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
@@ -147,37 +133,40 @@ def update_rss(audio_filename, episode_text):
         category=Category("News", "Daily News"),
     )
     
-    today_str = datetime.now().strftime('%Y-%m-%d')
+    # Use HK Time for publication date
+    now_hk = datetime.now(HKT)
+    
     p.add_episode(Episode(
-        title=f"電車日記: {today_str}",
+        title=f"電車日記: {now_hk.strftime('%Y-%m-%d')}",
         media=Media(f"{base_url}/{audio_filename}", 9000000, type="audio/mpeg"),
         summary=episode_text[:150] + "...",
-        publication_date=datetime.now().astimezone(),
+        publication_date=now_hk, # Critical: Sets pub date to HK time
     ))
     
     p.rss_file('feed.xml')
 
-# MAIN EXECUTION
+# MAIN
 if __name__ == "__main__":
-    date_str = datetime.now().strftime('%Y%m%d')
+    # 1. Cleanup Old Files First
+    cleanup_old_files()
+
+    # 2. Generate New Filename using HK TIME
+    now_hk = datetime.now(HKT)
+    date_str = now_hk.strftime('%Y%m%d') # e.g., 20260105
     mp3_filename = f"brief_{date_str}.mp3"
     
-    print("Fetching HKO Weather...")
+    print(f"Today is (HKT): {date_str}")
+    
+    print("Fetching content...")
     weather = get_weather()
-    print(f"Weather: {weather[:50]}...") # Print first 50 chars to check
+    news = get_news()
     
-    print("Fetching Global & HK News...")
-    raw_news = get_news()
+    print("Writing script...")
+    script = write_script(news, weather)
     
-    print("Writing Script (Tram Girl)...")
-    script = write_script(raw_news, weather)
-    
-    # Final cleanup before audio
-    final_script = clean_script_for_speech(script)
-    
-    print(f"Generating Audio (1.5x)...")
-    asyncio.run(generate_audio(final_script, mp3_filename))
+    print(f"Generating audio: {mp3_filename}...")
+    asyncio.run(generate_audio(script, mp3_filename))
     
     print("Updating RSS...")
-    update_rss(mp3_filename, final_script)
+    update_rss(mp3_filename, script)
     print("Done!")

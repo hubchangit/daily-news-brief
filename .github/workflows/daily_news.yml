@@ -30,13 +30,16 @@ jobs:
 
       - name: Download Background Music
         run: |
-          # We use wget with a User-Agent to stop Wikimedia from blocking us
-          wget -U "Mozilla/5.0" -O bgm.ogg "https://upload.wikimedia.org/wikipedia/commons/e/ea/Gymnopedie_No_1.ogg"
+          # Download from Free Music Archive (More stable than Wikimedia)
+          # We add "|| true" so if the download fails, the workflow DOES NOT crash.
+          wget -U "Mozilla/5.0" -O bgm.mp3 "https://files.freemusicarchive.org/storage-freemusicarchive-org/music/no_curator/Kevin_MacLeod/Classical_Sampler/Kevin_MacLeod_-_Erik_Satie_Gymnopedie_No_1.mp3" || true
           
-          # Check if the file is actually valid (larger than 1KB)
-          if [ ! -s bgm.ogg ]; then
-            echo "Download failed! Creating dummy file to prevent crash."
-            touch bgm.ogg # Create empty file so Python doesn't crash immediately, it will just skip music
+          # Check if the file is valid. If not, create a dummy so Python can check strictly.
+          if [ ! -s bgm.mp3 ]; then
+            echo "Download failed! Proceeding without music."
+            rm -f bgm.mp3 # Ensure no broken file exists
+          else
+            echo "Music downloaded successfully."
           fi
 
       - name: Run News Generator
@@ -50,8 +53,8 @@ jobs:
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # Clean up the music file (we don't want to save it to git)
-          rm -f bgm.ogg temp_voice.mp3
+          # Cleanup: Remove the music file so we don't save it to the repo
+          rm -f bgm.mp3 temp_voice.mp3
           
           git add .
           git commit -m "Daily Podcast Update" || exit 0

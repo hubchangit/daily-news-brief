@@ -16,7 +16,7 @@ REPO_ID = "Qwen/Qwen2.5-72B-Instruct"
 HF_TOKEN = os.environ.get("HF_TOKEN")
 HKT = timezone(timedelta(hours=8))
 
-# BGM SOURCE (Erik Satie - Gymnopedie No.1 - Very relaxing/Classy)
+# BGM SOURCE (Erik Satie - Gymnopedie No.1)
 BGM_URL = "https://upload.wikimedia.org/wikipedia/commons/e/ea/Gymnopedie_No_1.ogg"
 
 FEEDS = [
@@ -32,40 +32,70 @@ WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 def download_bgm():
     if not os.path.exists("bgm.ogg"):
         print("Downloading Background Music...")
-        response = requests.get(BGM_URL)
-        with open("bgm.ogg", "wb") as f:
-            f.write(response.content)
+        # FIX: Add User-Agent so Wikimedia knows we are a legitimate script
+        headers = {'User-Agent': 'PodcastBot/1.0 (news@example.com)'}
+        
+        try:
+            response = requests.get(BGM_URL, headers=headers, timeout=30)
+            response.raise_for_status() # Check for 403/404 errors
+            
+            with open("bgm.ogg", "wb") as f:
+                f.write(response.content)
+            
+            # Check if file is empty
+            if os.path.getsize("bgm.ogg") < 1000:
+                raise Exception("Downloaded file is too small (likely error page)")
+                
+            print("BGM Downloaded successfully.")
+        except Exception as e:
+            print(f"BGM Download failed: {e}")
+            return False
+    return True
 
 def mix_audio(voice_file, output_file):
     print("Mixing Audio with Music...")
     
-    # Load Voice
-    voice = AudioSegment.from_mp3(voice_file)
-    
-    # Load BGM
-    download_bgm()
-    bgm = AudioSegment.from_ogg("bgm.ogg")
-    
-    # Lower BGM volume by 20dB so it doesn't overpower the voice
-    bgm = bgm - 22 
-    
-    # Loop BGM to match voice length
-    looped_bgm = bgm * (len(voice) // len(bgm) + 1)
-    
-    # Trim BGM to exact voice length + 2 seconds fade out
-    final_bgm = looped_bgm[:len(voice) + 2000]
-    final_bgm = final_bgm.fade_out(2000)
-    
-    # Overlay Voice on BGM
-    # (position=1000 means voice starts 1 second after music starts)
-    final_mix = final_bgm.overlay(voice, position=1000)
-    
-    # Export
-    final_mix.export(output_file, format="mp3")
-    
-    # Clean up temp voice file
-    if os.path.exists(voice_file):
-        os.remove(voice_file)
+    # Attempt to download music
+    if not download_bgm():
+        print("Skipping music mix due to download failure.")
+        os.rename(voice_file, output_file)
+        return
+
+    try:
+        # Load Voice
+        voice = AudioSegment.from_mp3(voice_file)
+        
+        # Load BGM
+        bgm = AudioSegment.from_ogg("bgm.ogg")
+        
+        # Lower BGM volume by 22dB
+        bgm = bgm - 22 
+        
+        # Loop BGM to match voice length
+        looped_bgm = bgm * (len(voice) // len(bgm) + 1)
+        
+        # Trim BGM to exact voice length + 2 seconds fade out
+        final_bgm = looped_bgm[:len(voice) + 2000]
+        final_bgm = final_bgm.fade_out(2000)
+        
+        # Overlay Voice on BGM (voice starts at 1s)
+        final_mix = final_bgm.overlay(voice, position=1000)
+        
+        # Export
+        final_mix.export(output_file, format="mp3")
+        print("Mixing complete!")
+        
+        # Clean up temp voice file
+        if os.path.exists(voice_file):
+            os.remove(voice_file)
+            
+    except Exception as e:
+        print(f"Mixing failed (ffmpeg error?): {e}")
+        # FALLBACK: If mixing fails, just use the raw voice file
+        print("Using raw voice file as fallback.")
+        if os.path.exists(output_file):
+            os.remove(output_file)
+        os.rename(voice_file, output_file)
 
 # 3. CONTENT GENERATION
 # -----------------------------
@@ -105,20 +135,16 @@ def write_script(raw_news, weather):
     prompt = f"""
     You are "Tram Girl" (電車少女). Write a 5-7 minute news script in Cantonese.
     
-    **NEW SEGMENT:** Include a "Daily English Corner" at the end.
-    
-    Structure:
+    **Structure:**
     1. **Intro:** "哈囉大家好，今日係 {date_speak}..."
     2. **Weather:** Brief summary.
     3. **News Deep Dive:** HK & Global News.
-    4. **Daily English Corner (IMPORTANT):** - Teach ONE cool English Slang (e.g., "Spill the tea", "Rent free") OR a 2-line Poem.
-       - Explain the meaning in Cantonese.
-       - Use it in a sentence.
+    4. **English Corner:** Teach ONE English slang/idiom (e.g., "Touch grass", "Rent free"). Explain in Cantonese.
     5. **Outro:** "Okay, time to get off the tram. See you tomorrow!"
 
-    News Data:
+    **News:**
     {raw_news}
-    weather Data:
+    **Weather:**
     {weather}
     
     Rules: NO Markdown. Speak naturally.
@@ -147,6 +173,7 @@ def cleanup_old_files():
         for f in files[:-3]:
             try:
                 os.remove(f)
+                print(f"Deleted old file: {f}")
             except: pass
 
 def update_rss(audio_filename, episode_text):
@@ -169,7 +196,7 @@ def update_rss(audio_filename, episode_text):
     p.add_episode(Episode(
         title=f"電車日記: {now_hk.strftime('%Y-%m-%d')}",
         media=Media(f"{base_url}/{audio_filename}", 9000000, type="audio/mpeg"),
-        summary="Featuring: Daily News + English Corner (Slang/Poetry)",
+        summary="Featuring: Daily News + English Corner",
         publication_date=now_hk,
     ))
     p.rss_file('feed.xml')

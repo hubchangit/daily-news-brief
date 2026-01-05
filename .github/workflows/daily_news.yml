@@ -2,9 +2,8 @@ name: Daily News Generator
 
 on:
   schedule:
-    # Runs at 06:00 HKT daily (which is 22:00 UTC the previous day)
-    - cron: '0 22 * * *'
-  workflow_dispatch:      # Allows you to click "Run workflow" manually
+    - cron: '0 22 * * *' # 06:00 HKT
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -29,6 +28,17 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Download Background Music
+        run: |
+          # We use wget with a User-Agent to stop Wikimedia from blocking us
+          wget -U "Mozilla/5.0" -O bgm.ogg "https://upload.wikimedia.org/wikipedia/commons/e/ea/Gymnopedie_No_1.ogg"
+          
+          # Check if the file is actually valid (larger than 1KB)
+          if [ ! -s bgm.ogg ]; then
+            echo "Download failed! Creating dummy file to prevent crash."
+            touch bgm.ogg # Create empty file so Python doesn't crash immediately, it will just skip music
+          fi
+
       - name: Run News Generator
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
@@ -37,21 +47,12 @@ jobs:
 
       - name: Commit and Push
         run: |
-          # 1. Configure Git Identity
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           
-          # 2. Cleanup: Remove the music file so we don't save it to the repo
-          # (We download a fresh copy every time anyway)
+          # Clean up the music file (we don't want to save it to git)
           rm -f bgm.ogg temp_voice.mp3
           
-          # 3. Stage Changes
-          # "git add ." automatically handles:
-          # - New MP3s (Adds them)
-          # - Old MP3s (Deletes them)
-          # - Updated feed.xml
           git add .
-          
-          # 4. Commit and Push
           git commit -m "Daily Podcast Update" || exit 0
           git push

@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>電車少女 (Tram Girl)</title>
+    <title>電車少女 vs 維園阿伯</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily HK News, Weather &amp; English Corner.</description>
+    <description>Daily HK News. Energetic Host vs Grumpy Victoria Park Uncle.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Mon, 05 Jan 2026 02:37:28 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 05 Jan 2026 16:30:26 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@example.com (Tram Girl)</managingEditor>
-    <pubDate>Mon, 05 Jan 2026 10:37:28 +0800</pubDate>
+    <pubDate>Tue, 06 Jan 2026 00:30:26 +0800</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
@@ -21,11 +21,27 @@
       <itunes:email>news@example.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>電車日記: 2026-01-05</title>
-      <description><![CDATA[Featuring: Daily News + English Corner]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260105.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260105.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Mon, 05 Jan 2026 10:37:28 +0800</pubDate>
+      <title>早晨！2026-01-06 (維園版)</title>
+      <description><![CDATA[👧 早晨大家早！今日係 1月6日。 
+
+ 👴 唉，又係朝早，條腰好痛呀！成日都係咁濕濕渌渌嘅，真係離譜！ 
+
+ 👧 今早嘅天氣預測係天晴乾燥，早上寒冷，市區最低氣溫約12度，新界再低兩三度。日間最高氣溫約18度。吹清勁北風，離岸及高地吹強風。 
+
+ 👴 又落雨？天文台信唔信得過架？成日都係咁唔準，搞到我連衫都冇得換！ 
+
+ 👧 好嘞，我哋來睇下今日嘅頭條新聞。首先，邵家輝表示，元旦起一連3天假期零售業營業額不錯。政府表示，由上月31日至本月4日，整體訪港旅客約95萬人次，比去年同期上升約40%。受惠於內地「調休」安排，內地訪港旅客超過74萬人次，比去年同期上升約48%。 
+
+ 👴 哼！政府成日都係咁講，但係價錢成日都係咁貴，點會有人嚟消費嘛！ 
+
+ 👧 第二條，沙田威爾斯醫院地盤發生工業意外，兩名工人在地盤升降台工作，當升降台升至某個高度時，其中一名工人頭部撞到橫樑，受傷流血，陷於半昏迷狀態。 
+
+ 👴 唉呀，真係搞錯啦！成日都係咁唔注意安全，冇得啦！ 
+
+ 👧 最後一條，廉政公署落案起訴一名機電工程署的機械督察，涉嫌隱瞞欠下至少兩間財務公司債務，詐騙機電署儲蓄互助社向他批出3筆貸款，...]]></description>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260106.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260106.mp3" length="9000000" type="audio/mpeg"/>
+      <pubDate>Tue, 06 Jan 2026 00:30:26 +0800</pubDate>
     </item>
   </channel>
 </rss>

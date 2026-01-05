@@ -4,49 +4,76 @@ import asyncio
 import edge_tts
 import re
 import glob
+import requests
 from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
 from huggingface_hub import InferenceClient
+from pydub import AudioSegment
 
 # 1. SETUP
 # -----------------------------
 REPO_ID = "Qwen/Qwen2.5-72B-Instruct" 
 HF_TOKEN = os.environ.get("HF_TOKEN")
-
-# DEFINING HONG KONG TIME (UTC+8)
 HKT = timezone(timedelta(hours=8))
 
+# BGM SOURCE (Erik Satie - Gymnopedie No.1 - Very relaxing/Classy)
+BGM_URL = "https://upload.wikimedia.org/wikipedia/commons/e/ea/Gymnopedie_No_1.ogg"
+
 FEEDS = [
-    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",      # HK News
-    "https://www.scmp.com/rss/2/feed",                             # HK English
-    "https://feeds.bbci.co.uk/news/world/rss.xml",                 # BBC
-    "https://www.theguardian.com/world/rss"                        # Guardian
+    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",
+    "https://www.scmp.com/rss/2/feed",
+    "https://feeds.bbci.co.uk/news/world/rss.xml",
+    "https://www.theguardian.com/world/rss"
 ]
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
-# 2. JANITOR: DELETE OLD FILES
+# 2. AUDIO MIXING ENGINE
 # -----------------------------
-def cleanup_old_files():
-    # Find all mp3 files starting with "brief_"
-    files = sorted(glob.glob("brief_*.mp3"))
-    
-    # If we have more than 3 files, delete the oldest ones
-    if len(files) > 3:
-        for f in files[:-3]: # Keep the last 3, delete the rest
-            try:
-                os.remove(f)
-                print(f"cleaned up old episode: {f}")
-            except Exception as e:
-                print(f"Could not delete {f}: {e}")
+def download_bgm():
+    if not os.path.exists("bgm.ogg"):
+        print("Downloading Background Music...")
+        response = requests.get(BGM_URL)
+        with open("bgm.ogg", "wb") as f:
+            f.write(response.content)
 
-# 3. FETCH DATA
+def mix_audio(voice_file, output_file):
+    print("Mixing Audio with Music...")
+    
+    # Load Voice
+    voice = AudioSegment.from_mp3(voice_file)
+    
+    # Load BGM
+    download_bgm()
+    bgm = AudioSegment.from_ogg("bgm.ogg")
+    
+    # Lower BGM volume by 20dB so it doesn't overpower the voice
+    bgm = bgm - 22 
+    
+    # Loop BGM to match voice length
+    looped_bgm = bgm * (len(voice) // len(bgm) + 1)
+    
+    # Trim BGM to exact voice length + 2 seconds fade out
+    final_bgm = looped_bgm[:len(voice) + 2000]
+    final_bgm = final_bgm.fade_out(2000)
+    
+    # Overlay Voice on BGM
+    # (position=1000 means voice starts 1 second after music starts)
+    final_mix = final_bgm.overlay(voice, position=1000)
+    
+    # Export
+    final_mix.export(output_file, format="mp3")
+    
+    # Clean up temp voice file
+    if os.path.exists(voice_file):
+        os.remove(voice_file)
+
+# 3. CONTENT GENERATION
 # -----------------------------
 def get_weather():
     try:
         feed = feedparser.parse(WEATHER_URL)
         if feed.entries:
-            raw = feed.entries[0].description
-            return raw.replace('<br/>', ' ').replace('\n', ' ')[:300]
+            return feed.entries[0].description.replace('<br/>', ' ')[:300]
     except:
         return "Weather unavailable."
 
@@ -63,15 +90,11 @@ def get_news():
             print(f"Error {url}: {e}")
     return full_text
 
-# 4. SCRIPT & AUDIO
-# -----------------------------
 def clean_script_for_speech(text):
     text = re.sub(r'[*#_`~]', '', text)
-    text = re.sub(r'\[([^\]]+)\]\([^\)]+\)', r'\1', text)
     return re.sub(r'\n+', '\n', text).strip()
 
 def get_natural_date():
-    # Use HK Time for the spoken date
     now = datetime.now(HKT)
     return f"{now.month}月{now.day}日"
 
@@ -82,22 +105,23 @@ def write_script(raw_news, weather):
     prompt = f"""
     You are "Tram Girl" (電車少女). Write a 5-7 minute news script in Cantonese.
     
-    Current Date: {date_speak}
-    Weather: {weather}
+    **NEW SEGMENT:** Include a "Daily English Corner" at the end.
     
-    Rules:
-    1. NO MARKDOWN. Plain text only.
-    2. Translate ALL English news to Cantonese.
-    3. Tone: Casual, friendly deep-dive.
-    4. Structure:
-       - Intro: "哈囉大家好，今日係 {date_speak}..."
-       - Weather Summary.
-       - HK News Deep Dive.
-       - Global News Deep Dive.
-       - Outro.
+    Structure:
+    1. **Intro:** "哈囉大家好，今日係 {date_speak}..."
+    2. **Weather:** Brief summary.
+    3. **News Deep Dive:** HK & Global News.
+    4. **Daily English Corner (IMPORTANT):** - Teach ONE cool English Slang (e.g., "Spill the tea", "Rent free") OR a 2-line Poem.
+       - Explain the meaning in Cantonese.
+       - Use it in a sentence.
+    5. **Outro:** "Okay, time to get off the tram. See you tomorrow!"
 
-    News:
+    News Data:
     {raw_news}
+    weather Data:
+    {weather}
+    
+    Rules: NO Markdown. Speak naturally.
     """
     try:
         response = client.chat_completion(
@@ -110,20 +134,28 @@ def write_script(raw_news, weather):
         print(f"AI Error: {e}")
         return "Error generating script."
 
-async def generate_audio(text, filename):
+async def generate_raw_voice(text, filename):
     clean = clean_script_for_speech(text)
     communicate = edge_tts.Communicate(clean, "zh-HK-HiuGaaiNeural", rate="+50%")
     await communicate.save(filename)
 
-# 5. RSS UPDATE
+# 4. RSS & CLEANUP
 # -----------------------------
+def cleanup_old_files():
+    files = sorted(glob.glob("brief_*.mp3"))
+    if len(files) > 3:
+        for f in files[:-3]:
+            try:
+                os.remove(f)
+            except: pass
+
 def update_rss(audio_filename, episode_text):
     repo_name = os.environ.get("GITHUB_REPOSITORY", "local/test")
     base_url = f"https://{repo_name.split('/')[0]}.github.io/{repo_name.split('/')[1]}"
 
     p = Podcast(
         name="電車少女 (Tram Girl)",
-        description="Daily HK & Global news deep dive.",
+        description="Daily HK News, Weather & English Corner.",
         website=base_url,
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
@@ -133,29 +165,23 @@ def update_rss(audio_filename, episode_text):
         category=Category("News", "Daily News"),
     )
     
-    # Use HK Time for publication date
     now_hk = datetime.now(HKT)
-    
     p.add_episode(Episode(
         title=f"電車日記: {now_hk.strftime('%Y-%m-%d')}",
         media=Media(f"{base_url}/{audio_filename}", 9000000, type="audio/mpeg"),
-        summary=episode_text[:150] + "...",
-        publication_date=now_hk, # Critical: Sets pub date to HK time
+        summary="Featuring: Daily News + English Corner (Slang/Poetry)",
+        publication_date=now_hk,
     ))
-    
     p.rss_file('feed.xml')
 
 # MAIN
 if __name__ == "__main__":
-    # 1. Cleanup Old Files First
     cleanup_old_files()
 
-    # 2. Generate New Filename using HK TIME
     now_hk = datetime.now(HKT)
-    date_str = now_hk.strftime('%Y%m%d') # e.g., 20260105
-    mp3_filename = f"brief_{date_str}.mp3"
-    
-    print(f"Today is (HKT): {date_str}")
+    date_str = now_hk.strftime('%Y%m%d')
+    final_mp3 = f"brief_{date_str}.mp3"
+    temp_voice = "temp_voice.mp3"
     
     print("Fetching content...")
     weather = get_weather()
@@ -164,9 +190,12 @@ if __name__ == "__main__":
     print("Writing script...")
     script = write_script(news, weather)
     
-    print(f"Generating audio: {mp3_filename}...")
-    asyncio.run(generate_audio(script, mp3_filename))
+    print("Generating Raw Voice...")
+    asyncio.run(generate_raw_voice(script, temp_voice))
+    
+    print("Mixing with Music...")
+    mix_audio(temp_voice, final_mp3)
     
     print("Updating RSS...")
-    update_rss(mp3_filename, script)
+    update_rss(final_mp3, script)
     print("Done!")

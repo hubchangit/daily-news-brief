@@ -4,7 +4,6 @@ import asyncio
 import edge_tts
 import re
 import glob
-import requests
 from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
 from huggingface_hub import InferenceClient
@@ -16,9 +15,6 @@ REPO_ID = "Qwen/Qwen2.5-72B-Instruct"
 HF_TOKEN = os.environ.get("HF_TOKEN")
 HKT = timezone(timedelta(hours=8))
 
-# BGM SOURCE (Erik Satie - Gymnopedie No.1)
-BGM_URL = "https://upload.wikimedia.org/wikipedia/commons/e/ea/Gymnopedie_No_1.ogg"
-
 FEEDS = [
     "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",
     "https://www.scmp.com/rss/2/feed",
@@ -29,35 +25,15 @@ WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
 # 2. AUDIO MIXING ENGINE
 # -----------------------------
-def download_bgm():
-    if not os.path.exists("bgm.ogg"):
-        print("Downloading Background Music...")
-        # FIX: Add User-Agent so Wikimedia knows we are a legitimate script
-        headers = {'User-Agent': 'PodcastBot/1.0 (news@example.com)'}
-        
-        try:
-            response = requests.get(BGM_URL, headers=headers, timeout=30)
-            response.raise_for_status() # Check for 403/404 errors
-            
-            with open("bgm.ogg", "wb") as f:
-                f.write(response.content)
-            
-            # Check if file is empty
-            if os.path.getsize("bgm.ogg") < 1000:
-                raise Exception("Downloaded file is too small (likely error page)")
-                
-            print("BGM Downloaded successfully.")
-        except Exception as e:
-            print(f"BGM Download failed: {e}")
-            return False
-    return True
-
 def mix_audio(voice_file, output_file):
     print("Mixing Audio with Music...")
     
-    # Attempt to download music
-    if not download_bgm():
-        print("Skipping music mix due to download failure.")
+    # Check if music file exists and is valid (> 1KB)
+    has_music = os.path.exists("bgm.ogg") and os.path.getsize("bgm.ogg") > 1024
+
+    if not has_music:
+        print("Music file missing or invalid. Skipping mix.")
+        if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
         return
 
@@ -68,8 +44,8 @@ def mix_audio(voice_file, output_file):
         # Load BGM
         bgm = AudioSegment.from_ogg("bgm.ogg")
         
-        # Lower BGM volume by 22dB
-        bgm = bgm - 22 
+        # Lower BGM volume by 25dB (So it is very subtle background)
+        bgm = bgm - 25
         
         # Loop BGM to match voice length
         looped_bgm = bgm * (len(voice) // len(bgm) + 1)
@@ -78,8 +54,8 @@ def mix_audio(voice_file, output_file):
         final_bgm = looped_bgm[:len(voice) + 2000]
         final_bgm = final_bgm.fade_out(2000)
         
-        # Overlay Voice on BGM (voice starts at 1s)
-        final_mix = final_bgm.overlay(voice, position=1000)
+        # Overlay Voice on BGM (voice starts at 0.5s)
+        final_mix = final_bgm.overlay(voice, position=500)
         
         # Export
         final_mix.export(output_file, format="mp3")
@@ -90,11 +66,9 @@ def mix_audio(voice_file, output_file):
             os.remove(voice_file)
             
     except Exception as e:
-        print(f"Mixing failed (ffmpeg error?): {e}")
-        # FALLBACK: If mixing fails, just use the raw voice file
+        print(f"Mixing failed: {e}")
         print("Using raw voice file as fallback.")
-        if os.path.exists(output_file):
-            os.remove(output_file)
+        if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
 
 # 3. CONTENT GENERATION
@@ -121,8 +95,10 @@ def get_news():
     return full_text
 
 def clean_script_for_speech(text):
-    text = re.sub(r'[*#_`~]', '', text)
-    return re.sub(r'\n+', '\n', text).strip()
+    # Remove Markdown symbols but KEEP punctuation
+    text = re.sub(r'[*#_`~]', '', text) 
+    text = re.sub(r'\n+', '\n', text).strip()
+    return text
 
 def get_natural_date():
     now = datetime.now(HKT)
@@ -133,21 +109,24 @@ def write_script(raw_news, weather):
     date_speak = get_natural_date()
     
     prompt = f"""
-    You are "Tram Girl" (電車少女). Write a 5-7 minute news script in Cantonese.
-    
-    **Structure:**
-    1. **Intro:** "哈囉大家好，今日係 {date_speak}..."
-    2. **Weather:** Brief summary.
-    3. **News Deep Dive:** HK & Global News.
-    4. **English Corner:** Teach ONE English slang/idiom (e.g., "Touch grass", "Rent free"). Explain in Cantonese.
-    5. **Outro:** "Okay, time to get off the tram. See you tomorrow!"
+    You are "Tram Girl" (電車少女), a friendly HK news host.
+    Write a news script in natural, spoken Cantonese (口語).
 
-    **News:**
+    Structure:
+    1. **Opener:** "哈囉大家好，今日係 {date_speak}..."
+    2. **Weather:** Brief check.
+    3. **The News:** Cover 3-4 top stories.
+    4. **English Corner:** Teach ONE simple English idiom/slang. Explain it in Cantonese.
+    5. **Closer:** "See you tomorrow!"
+
+    **Content:**
     {raw_news}
-    **Weather:**
     {weather}
     
-    Rules: NO Markdown. Speak naturally.
+    Style: 
+    - Use clear sentences.
+    - Don't be too formal.
+    - NO Markdown formatting.
     """
     try:
         response = client.chat_completion(
@@ -162,7 +141,8 @@ def write_script(raw_news, weather):
 
 async def generate_raw_voice(text, filename):
     clean = clean_script_for_speech(text)
-    communicate = edge_tts.Communicate(clean, "zh-HK-HiuGaaiNeural", rate="+50%")
+    # CHANGED: Rate reduced to +25% for better naturalness
+    communicate = edge_tts.Communicate(clean, "zh-HK-HiuGaaiNeural", rate="+25%")
     await communicate.save(filename)
 
 # 4. RSS & CLEANUP
@@ -173,7 +153,6 @@ def cleanup_old_files():
         for f in files[:-3]:
             try:
                 os.remove(f)
-                print(f"Deleted old file: {f}")
             except: pass
 
 def update_rss(audio_filename, episode_text):

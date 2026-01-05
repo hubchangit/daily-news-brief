@@ -16,22 +16,31 @@ HF_TOKEN = os.environ.get("HF_TOKEN")
 HKT = timezone(timedelta(hours=8))
 
 # VOICES
-VOICE_FEMALE = "zh-HK-HiuGaaiNeural" # Tram Girl (Professional, Cheerful)
-VOICE_MALE = "zh-HK-WanLungNeural"   # Victoria Park Uncle (Grumpy, Low pitched)
+# Girl: Cheerful, clear, professional.
+VOICE_FEMALE = "zh-HK-HiuGaaiNeural" 
+# Uncle: Lower pitch, mature, authoritative.
+VOICE_MALE = "zh-HK-WanLungNeural"   
 
-FEEDS = [
-    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml",
+# NEWS SOURCES
+# Split into Local and Global to ensure we get a balanced mix
+FEEDS_HK = [
     "https://www.scmp.com/rss/2/feed",
-    "https://feeds.bbci.co.uk/news/world/rss.xml"
+    "https://rss.stheadline.com/rss/realtime/hk.xml", # Sing Tao Realtime HK
+    "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml"
 ]
+
+FEEDS_GLOBAL = [
+    "https://feeds.bbci.co.uk/news/world/rss.xml",
+    "https://www.theguardian.com/world/rss"
+]
+
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
 # 2. AUDIO PROCESSING ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # Uncle talks slightly slower and louder (simulated by engine)
-    rate = "+10%" if voice == VOICE_MALE else "+20%"
-    communicate = edge_tts.Communicate(text, voice, rate=rate)
+    # Both set to +25% speed (1.25x) as requested
+    communicate = edge_tts.Communicate(text, voice, rate="+25%")
     await communicate.save(filename)
 
 async def generate_dialogue_audio(script_text, output_file):
@@ -47,17 +56,17 @@ async def generate_dialogue_audio(script_text, output_file):
         line = line.strip()
         if not line: continue
         
-        # Determine speaker based on tags
+        # Determine speaker
         if line.startswith("Uncle:"):
             voice = VOICE_MALE
             text = line.replace("Uncle:", "").strip()
         else:
             voice = VOICE_FEMALE
-            text = line.replace("Girl:", "").strip() # Default to Girl
+            text = line.replace("Girl:", "").strip()
         
         if not text: continue
 
-        # Generate audio for this specific line
+        # Generate audio for this line
         temp_filename = f"temp_line_{i}.mp3"
         await generate_line(text, voice, temp_filename)
         
@@ -65,16 +74,15 @@ async def generate_dialogue_audio(script_text, output_file):
         segment = AudioSegment.from_mp3(temp_filename)
         combined_audio += segment
         
-        # Add a pause. 
-        # Shorter pause if Uncle interrupts (optional logic), but 300ms is standard natural gap.
+        # 300ms natural pause between speakers
         combined_audio += AudioSegment.silent(duration=300)
         
         temp_files.append(temp_filename)
     
-    # Export the full dialogue track
+    # Export full track
     combined_audio.export(output_file, format="mp3")
     
-    # Cleanup individual line files
+    # Cleanup
     for f in temp_files:
         if os.path.exists(f): os.remove(f)
 
@@ -91,7 +99,7 @@ def mix_music(voice_file, output_file):
     try:
         voice = AudioSegment.from_mp3(voice_file)
         bgm = AudioSegment.from_mp3("bgm.mp3")
-        bgm = bgm - 23 # Lower music volume
+        bgm = bgm - 23 # Lower volume for background
         
         # Loop music
         looped_bgm = bgm * (len(voice) // len(bgm) + 1)
@@ -116,68 +124,78 @@ def get_weather():
             return feed.entries[0].description.replace('<br/>', ' ')[:300]
     except: return "Weather unavailable."
 
-def get_news():
-    full_text = ""
-    for url in FEEDS:
+def get_feeds_content(urls, limit=4):
+    content = ""
+    count = 0
+    for url in urls:
+        if count >= limit: break
         try:
             feed = feedparser.parse(url)
-            for item in feed.entries[:3]:
+            for item in feed.entries:
+                if count >= limit: break
+                title = item.title
+                # Clean up description
                 desc = item.description.replace('<br>', ' ').replace('\n', ' ')[:200]
-                full_text += f"{item.title}: {desc}\n"
+                content += f"- {title}: {desc}\n"
+                count += 1
         except: pass
-    return full_text
+    return content
 
 def get_natural_date():
     now = datetime.now(HKT)
     return f"{now.month}月{now.day}日"
 
-def write_script(raw_news, weather):
+def write_script(hk_news, global_news, weather):
     client = InferenceClient(token=HF_TOKEN)
     date_speak = get_natural_date()
     
-    # UPDATED PROMPT FOR "VICTORIA PARK UNCLE"
+    # UPDATED PROMPT: INTELLIGENT ANALYST PERSONA
     prompt = f"""
-    You are writing a script for a HK Morning Radio Show (Talk Show style).
+    You are writing a script for a HK Current Affairs Radio Show.
     
     **Characters:**
-    1. **Girl**: "Tram Girl" (電車少女). Young, energetic, polite, tries to report news professionally.
-    2. **Uncle**: "Victoria Park Uncle" (維園阿伯). Old, loud, very critical, opinionated. 
-       - He uses heavy HK slang (e.g., "搞錯", "離譜", "食塞米").
-       - He constantly interrupts or complains about the government/weather/prices, but he loves HK deep down.
+    1. **Girl:** (Host) Professional, clear, presents the facts.
+    2. **Uncle:** (Commentator, "Uncle Wah") Experienced, seasoned Hong Konger.
+       - Instead of complaining, he provides **insight, historical context, or economic logic**.
+       - He is skeptical but rational. He sounds like a wise mentor or an experienced analyst.
+       - He speaks natural Cantonese (口語).
 
     **Format Rule (STRICT):**
     - Start every line with exactly "Girl:" or "Uncle:".
     - Separate every spoken line with a "|" character. 
-    - NO newlines between dialogue. Keep it one long string separated by "|".
+    - NO newlines. Keep it one long string.
 
-    **Structure:**
-    1. **Intro:** Girl says hello. Uncle complains about waking up early or the humidity.
-    2. **Weather:** Girl reads forecast. Uncle reacts (e.g., "又落雨？天文台信唔信得過架？").
-    3. **News:** Girl reads ~3 headlines. Uncle gives a "hot take" or critical comment on each.
-    4. **English Corner:** Girl teaches a modern slang. Uncle tries to use it but fails or mocks it.
-    5. **Outro:** Girl signs off. Uncle says he's going to drink Yam Cha.
+    **Show Flow:**
+    1. **Intro:** Brief greeting.
+    2. **Weather:** Girl reports. Uncle advises based on weather (e.g., "Bring umbrella" or "Good for hiking").
+    3. **HK News (Cover 4 items):** Girl reads headline. Uncle adds a short, sharp insight (1 sentence).
+    4. **Global News (Cover 4 items):** Girl reads headline. Uncle compares it to HK or explains why it matters.
+    5. **English Corner:** Girl teaches a phrase. Uncle explains how to use it in business or daily life.
+    6. **Outro:** Sign off.
 
     **Data:**
     Date: {date_speak}
     Weather: {weather}
-    News: {raw_news}
+    HK News: 
+    {hk_news}
+    Global News: 
+    {global_news}
 
-    **Example Output:**
-    Girl: 早晨大家早！今日係 {date_speak}。 | Uncle: 唉，又係朝早，條腰好痛呀！ | Girl: 睇黎今日會有雨喎。 | Uncle: 哼！天文台講野邊度準架！
+    **Example Style:**
+    Girl: 股市今日跌咗三百點。 | Uncle: 其實好正常，因為外圍息口未定，大家都採取觀望態度，唔洗太驚。
     """
     
     try:
         response = client.chat_completion(
             model=REPO_ID, 
             messages=[{"role": "user", "content": prompt}],
-            max_tokens=4000, temperature=0.7
+            max_tokens=4500, temperature=0.7
         )
         content = response.choices[0].message.content
-        # Safety cleanup: remove newlines so the splitter works perfectly
         return content.replace("\n", " ")
     except Exception as e:
         print(f"AI Error: {e}")
-        return "Girl: Error generating script. | Uncle: 機器壞咗啦！"
+        return "Girl: Error generating script. | Uncle: Technical difficulties."
 
 # 4. MAIN FLOW
 # -----------------------------
@@ -191,8 +209,8 @@ def update_rss(audio_filename, episode_text):
     base_url = f"https://{repo_name.split('/')[0]}.github.io/{repo_name.split('/')[1]}"
 
     p = Podcast(
-        name="電車少女 vs 維園阿伯",
-        description="Daily HK News. Energetic Host vs Grumpy Victoria Park Uncle.",
+        name="電車晨報 (Tram Morning Brief)",
+        description="Daily News Analysis. HK & Global headlines with insight.",
         website=base_url,
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
@@ -203,11 +221,10 @@ def update_rss(audio_filename, episode_text):
     )
     
     now_hk = datetime.now(HKT)
-    # Make the summary readable in the RSS app
-    summary_clean = episode_text.replace("|", "\n\n").replace("Girl:", "👧").replace("Uncle:", "👴")[:500] + "..."
+    summary_clean = episode_text.replace("|", "\n\n").replace("Girl:", "👧").replace("Uncle:", "👨‍💼")[:500] + "..."
     
     p.add_episode(Episode(
-        title=f"早晨！{now_hk.strftime('%Y-%m-%d')} (維園版)",
+        title=f"晨早新聞分析: {now_hk.strftime('%Y-%m-%d')}",
         media=Media(f"{base_url}/{audio_filename}", 9000000, type="audio/mpeg"),
         summary=summary_clean,
         publication_date=now_hk,
@@ -224,16 +241,21 @@ if __name__ == "__main__":
     
     print("Fetching content...")
     weather = get_weather()
-    news = get_news()
+    
+    print("Fetching HK News (SCMP/SingTao/RTHK)...")
+    hk_news = get_feeds_content(FEEDS_HK, limit=4)
+    
+    print("Fetching Global News (BBC/Guardian)...")
+    global_news = get_feeds_content(FEEDS_GLOBAL, limit=4)
     
     print("Writing script...")
-    script = write_script(news, weather)
+    script = write_script(hk_news, global_news, weather)
     
-    # Fallback safety for the tag
+    # Safety Check
     if "|" not in script:
         script = f"Girl: {script}"
 
-    print("Generating Dialogue Voice...")
+    print("Generating Dialogue Voice (1.25x)...")
     asyncio.run(generate_dialogue_audio(script, temp_voice))
     
     print("Mixing with Music...")

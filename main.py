@@ -28,8 +28,8 @@ WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 def mix_audio(voice_file, output_file):
     print("Mixing Audio with Music...")
     
-    # Check if music file exists and is valid (> 1KB)
-    has_music = os.path.exists("bgm.ogg") and os.path.getsize("bgm.ogg") > 1024
+    # Check for MP3 music file
+    has_music = os.path.exists("bgm.mp3") and os.path.getsize("bgm.mp3") > 1024
 
     if not has_music:
         print("Music file missing or invalid. Skipping mix.")
@@ -41,10 +41,10 @@ def mix_audio(voice_file, output_file):
         # Load Voice
         voice = AudioSegment.from_mp3(voice_file)
         
-        # Load BGM
-        bgm = AudioSegment.from_ogg("bgm.ogg")
+        # Load BGM (Now MP3)
+        bgm = AudioSegment.from_mp3("bgm.mp3")
         
-        # Lower BGM volume by 25dB (So it is very subtle background)
+        # Lower BGM volume by 25dB
         bgm = bgm - 25
         
         # Loop BGM to match voice length
@@ -95,7 +95,6 @@ def get_news():
     return full_text
 
 def clean_script_for_speech(text):
-    # Remove Markdown symbols but KEEP punctuation
     text = re.sub(r'[*#_`~]', '', text) 
     text = re.sub(r'\n+', '\n', text).strip()
     return text
@@ -141,7 +140,7 @@ def write_script(raw_news, weather):
 
 async def generate_raw_voice(text, filename):
     clean = clean_script_for_speech(text)
-    # CHANGED: Rate reduced to +25% for better naturalness
+    # Rate +25% for better naturalness
     communicate = edge_tts.Communicate(clean, "zh-HK-HiuGaaiNeural", rate="+25%")
     await communicate.save(filename)
 

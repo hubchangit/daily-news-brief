@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Mon, 12 Jan 2026 02:48:38 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 05:22:32 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Mon, 12 Jan 2026 10:48:38 +0800</pubDate>
+    <pubDate>Mon, 12 Jan 2026 13:22:32 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,12 +20,12 @@
     </itunes:owner>
     <item>
       <title>晨早新聞: 2026-01-12</title>
-      <description><![CDATA[電車少女: 今日系統發生嚴重故障。 
+      <description><![CDATA[電車少女: 今日系統故障。 
 
- 出木杉: 我地聽日再嘗試啦。]]></description>
+ 出木杉: 請檢查API設置。]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260112.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260112.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Mon, 12 Jan 2026 10:48:38 +0800</pubDate>
+      <pubDate>Mon, 12 Jan 2026 13:22:32 +0800</pubDate>
     </item>
   </channel>
 </rss>

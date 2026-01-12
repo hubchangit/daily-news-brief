@@ -11,7 +11,8 @@ from pydub import AudioSegment
 
 # 1. SETUP
 # -----------------------------
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+api_key = os.environ.get("GEMINI_API_KEY")
+genai.configure(api_key=api_key)
 HKT = timezone(timedelta(hours=8))
 
 # VOICES
@@ -24,18 +25,28 @@ FEEDS_HK = [
     "https://rss.stheadline.com/rss/realtime/hk.xml",
     "https://rthk.hk/rthk/news/rss/c_expressnews_clocal.xml"
 ]
-
 FEEDS_GLOBAL = [
     "https://feeds.bbci.co.uk/news/world/rss.xml",
     "https://www.theguardian.com/world/rss"
 ]
-
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
+
+# --- DEBUG: CHECK AVAILABLE MODELS ---
+# This prints what your API Key is actually allowed to see.
+print("🔍 SYSTEM CHECK: Checking available Gemini models...")
+try:
+    available_models = []
+    for m in genai.list_models():
+        if 'generateContent' in m.supported_generation_methods:
+            available_models.append(m.name)
+            print(f"   - Found: {m.name}")
+except Exception as e:
+    print(f"⚠️ SYSTEM CHECK FAILED: {e}")
+# -------------------------------------
 
 # 2. AUDIO ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # Tuning: Girl slightly faster, Dekisugi neutral
     rate = "+10%" if voice == VOICE_FEMALE else "+0%"
     communicate = edge_tts.Communicate(text, voice, rate=rate)
     await communicate.save(filename)
@@ -51,17 +62,14 @@ async def generate_dialogue_audio(script_text, output_file):
         line = line.strip()
         if not line: continue
         
-        # LOGIC FIX: Check for Chinese names OR English names
+        # Match Chinese names OR English names
         if "Dekisugi:" in line or "出木杉:" in line:
             voice = VOICE_MALE
-            # Remove both possible prefixes
             text = line.replace("Dekisugi:", "").replace("出木杉:", "").strip()
         else:
-            # Default to Girl if unsure
             voice = VOICE_FEMALE
             text = line.replace("Girl:", "").replace("電車少女:", "").strip()
         
-        # Cleanup bad symbols
         text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！]', '', text)
         if len(text) < 1: continue
 
@@ -118,7 +126,7 @@ def run_janitor():
             try: os.remove(f)
             except: pass
 
-# 4. CONTENT (WITH FALLBACK)
+# 4. CONTENT
 # -----------------------------
 def get_weather():
     try:
@@ -140,23 +148,23 @@ def get_feeds(urls):
         except: pass
     return content
 
-def generate_script_safe(prompt):
-    """Tries multiple models to avoid 404 errors"""
-    models_to_try = ["gemini-1.5-flash", "gemini-pro", "gemini-1.0-pro"]
+def generate_script_robust(prompt):
+    # FALLBACK STRATEGY: Try the most stable model first
+    # gemini-pro (1.0) is the most widely supported model
+    models = ["gemini-pro", "gemini-1.5-flash"]
     
-    for model_name in models_to_try:
-        print(f"🤖 Attempting to generate script with model: {model_name}...")
+    for m in models:
         try:
-            model = genai.GenerativeModel(model_name)
+            print(f"🤖 Trying model: {m}...")
+            model = genai.GenerativeModel(m)
             response = model.generate_content(prompt)
             return response.text.replace("\n", " ").replace("**", "")
         except Exception as e:
-            print(f"⚠️ Model {model_name} failed: {e}")
+            print(f"⚠️ Model {m} failed: {e}")
             continue
             
-    # If all fail
-    print("❌ All Gemini models failed.")
-    return "電車少女: 今日系統發生嚴重故障。 | 出木杉: 我地聽日再嘗試啦。"
+    print("❌ All models failed.")
+    return "電車少女: 今日系統故障。 | 出木杉: 請檢查API設置。"
 
 def write_script(hk_news, global_news, weather):
     prompt = f"""
@@ -175,7 +183,7 @@ def write_script(hk_news, global_news, weather):
     **Example:**
     電車少女: 早晨！今日天氣點呀？ | 出木杉: 今日有雨，記得帶遮啦。
     """
-    return generate_script_safe(prompt)
+    return generate_script_robust(prompt)
 
 def update_rss(audio_file, script):
     repo = os.environ.get("GITHUB_REPOSITORY", "local/test")
@@ -218,7 +226,6 @@ if __name__ == "__main__":
     print("Generating script...")
     script = write_script(hk, gl, we)
     
-    # Fallback to ensure "Girl" speaks if format is broken
     if "|" not in script: script = f"電車少女: {script}"
     
     try:

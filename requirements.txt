@@ -1,6 +1,5 @@
 feedparser
 edge-tts
 podgen
-huggingface_hub
 pydub
-requests
+google-generativeai

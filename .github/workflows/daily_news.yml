@@ -45,6 +45,7 @@ jobs:
       - name: Run News Generator
         env:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }} 
           GITHUB_REPOSITORY: ${{ github.repository }}
         run: python main.py
 

@@ -5,14 +5,14 @@ import edge_tts
 import re
 import glob
 from google import genai
+from google.genai import types 
 from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
 from pydub import AudioSegment
 
 # 1. SETUP
 # -----------------------------
-# Initialize the new Google GenAI Client
-# This fixes the "Deprecation" warning
+# Initialize Google GenAI Client
 client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 HKT = timezone(timedelta(hours=8))
@@ -38,7 +38,6 @@ WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 # 2. AUDIO PROCESSING ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # Tuning: Girls faster (+10%), Boys normal (+0%)
     rate = "+10%" if voice == VOICE_FEMALE else "+0%"
     communicate = edge_tts.Communicate(text, voice, rate=rate)
     await communicate.save(filename)
@@ -142,7 +141,7 @@ def run_super_janitor():
             try: os.remove(j)
             except: pass
 
-# 4. GEMINI SCRIPT GENERATION (NEW SDK)
+# 4. GEMINI SCRIPT GENERATION (UNFILTERED)
 # -----------------------------
 def get_weather():
     try:
@@ -169,7 +168,6 @@ def get_feeds_content(urls, limit=4):
 
 def write_script(hk_news, global_news, weather):
     now = datetime.now(HKT)
-    date_speak = f"{now.month}月{now.day}日"
     
     prompt = f"""
     You are the scriptwriter for "Tram Girl & Dekisugi", a Hong Kong morning news podcast.
@@ -198,18 +196,45 @@ def write_script(hk_news, global_news, weather):
     """
     
     try:
-        # NEW SDK CALL
+        # Generate with Safety Filters DISABLED
         response = client.models.generate_content(
             model="gemini-1.5-flash",
-            contents=prompt
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                safety_settings=[
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_HATE_SPEECH",
+                        threshold="BLOCK_NONE"
+                    ),
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_DANGEROUS_CONTENT",
+                        threshold="BLOCK_NONE"
+                    ),
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_SEXUALLY_EXPLICIT",
+                        threshold="BLOCK_NONE"
+                    ),
+                    types.SafetySetting(
+                        category="HARM_CATEGORY_HARASSMENT",
+                        threshold="BLOCK_NONE"
+                    )
+                ]
+            )
         )
-        text = response.text
-        # Safety cleanups
-        text = text.replace("\n", " ").replace("**", "")
-        return text
+        
+        # Check if response is valid
+        if response.text:
+            text = response.text
+            text = text.replace("\n", " ").replace("**", "")
+            return text
+        else:
+            print(f"Gemini Empty Response. Finish Reason: {response.finish_reason}")
+            return "Girl: AI Sleepy. | Dekisugi: No data."
+            
     except Exception as e:
-        print(f"Gemini Error: {e}")
-        return "Girl: 系統故障。 | Dekisugi: 請稍後再試。"
+        print(f"Gemini Critical Error: {e}")
+        # Print full response object for debugging if needed
+        return "Girl: 系統故障。 | Dekisugi: 請檢查API日誌。"
 
 def update_rss(audio_filename, episode_text):
     repo_name = os.environ.get("GITHUB_REPOSITORY", "local/test")

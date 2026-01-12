@@ -4,20 +4,20 @@ import asyncio
 import edge_tts
 import re
 import glob
-import google.generativeai as genai
+from google import genai
 from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
 from pydub import AudioSegment
 
 # 1. SETUP
 # -----------------------------
-# Configure Google Gemini
-genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+# Initialize the new Google GenAI Client
+# This fixes the "Deprecation" warning
+client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
 
 HKT = timezone(timedelta(hours=8))
 
 # VOICES (Edge TTS)
-# We tune them slightly in the generate function
 VOICE_FEMALE = "zh-HK-HiuGaaiNeural" # Tram Girl
 VOICE_MALE = "zh-HK-WanLungNeural"   # Dekisugi
 
@@ -38,16 +38,8 @@ WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 # 2. AUDIO PROCESSING ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # TUNING: 
-    # Girls speak slightly faster (+10%) for energy.
-    # Dekisugi speaks at normal speed (+0%) but slightly lower pitch if possible
-    # (Note: edge-tts pitch adjustment is tricky, so we rely on rate)
-    
-    if voice == VOICE_FEMALE:
-        rate = "+10%" 
-    else:
-        rate = "+0%" # Slower, more analytical/calm for Dekisugi
-        
+    # Tuning: Girls faster (+10%), Boys normal (+0%)
+    rate = "+10%" if voice == VOICE_FEMALE else "+0%"
     communicate = edge_tts.Communicate(text, voice, rate=rate)
     await communicate.save(filename)
 
@@ -72,7 +64,7 @@ async def generate_dialogue_audio(script_text, output_file):
             voice = VOICE_FEMALE
             text = line.replace("Girl:", "").strip()
         
-        # Cleanup symbols that choke TTS
+        # Cleanup
         text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！]', '', text)
         if not text or len(text) < 1: continue
 
@@ -85,7 +77,6 @@ async def generate_dialogue_audio(script_text, output_file):
             if os.path.exists(temp_filename) and os.path.getsize(temp_filename) > 0:
                 segment = AudioSegment.from_mp3(temp_filename)
                 combined_audio += segment
-                # 350ms pause for better pacing
                 combined_audio += AudioSegment.silent(duration=350)
                 temp_files.append(temp_filename)
                 valid_audio_count += 1
@@ -140,20 +131,18 @@ def run_super_janitor():
     now_hk = datetime.now(HKT)
     todays_filename = f"brief_{now_hk.strftime('%Y%m%d')}.mp3"
     
-    # Delete old episodes (except today's if it exists)
     for f in glob.glob("brief_*.mp3"):
         if f != todays_filename:
             try: os.remove(f)
             except: pass
             
-    # Delete junk
     junk_patterns = ["temp_line_*.mp3", "temp_voice.mp3", "dialogue_raw.mp3"]
     for pattern in junk_patterns:
         for j in glob.glob(pattern):
             try: os.remove(j)
             except: pass
 
-# 4. GEMINI SCRIPT GENERATION
+# 4. GEMINI SCRIPT GENERATION (NEW SDK)
 # -----------------------------
 def get_weather():
     try:
@@ -179,9 +168,6 @@ def get_feeds_content(urls, limit=4):
     return content
 
 def write_script(hk_news, global_news, weather):
-    # Use Gemini 1.5 Flash (Free & Fast)
-    model = genai.GenerativeModel('gemini-1.5-flash')
-    
     now = datetime.now(HKT)
     date_speak = f"{now.month}月{now.day}日"
     
@@ -189,13 +175,13 @@ def write_script(hk_news, global_news, weather):
     You are the scriptwriter for "Tram Girl & Dekisugi", a Hong Kong morning news podcast.
 
     **Characters:**
-    1. **Girl (Tram Girl):** Energetic, cheerful, relatable. She asks the questions normal people have.
-    2. **Dekisugi (出木杉):** Calm, intelligent, analytical. He explains complex news simply and logically.
+    1. **Girl (Tram Girl):** Energetic, cheerful, relatable.
+    2. **Dekisugi (出木杉):** Calm, intelligent, analytical.
 
     **LANGUAGE REQUIREMENTS (STRICT):**
     - **Language:** Authentic Hong Kong Cantonese (廣東話口語).
     - **Keywords:** Use "嘅" (not 的), "係" (not 是), "佢" (not 他), "咁" (not 這樣).
-    - **Tone:** Conversational. They should banter slightly.
+    - **Tone:** Conversational.
 
     **Format Requirements:**
     - Format: `Girl: [Text] | Dekisugi: [Text] | Girl: [Text]`
@@ -203,18 +189,20 @@ def write_script(hk_news, global_news, weather):
     
     **Show Structure:**
     1. **Intro:** Girl greets energeticly. Dekisugi greets calmly.
-    2. **Weather:** {weather} (Dekisugi gives practical advice, e.g., umbrella/air con).
+    2. **Weather:** {weather} (Dekisugi gives practical advice).
     3. **HK News Analysis:** - News: {hk_news}
-       - Girl mentions a headline. Dekisugi explains the *implication* (e.g., impact on property/prices/daily life).
+       - Girl mentions a headline. Dekisugi explains the impact.
     4. **Global News:** - News: {global_news}
-       - Brief mention of 1-2 major stories.
+       - Brief mention.
     5. **Outro:** Quick positive sign-off.
-
-    **Script:**
     """
     
     try:
-        response = model.generate_content(prompt)
+        # NEW SDK CALL
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=prompt
+        )
         text = response.text
         # Safety cleanups
         text = text.replace("\n", " ").replace("**", "")
@@ -273,7 +261,6 @@ if __name__ == "__main__":
     print("Writing script with Google Gemini...")
     script = write_script(hk_news, global_news, weather)
     
-    # Fallback if AI fails to format correctly
     if "|" not in script: script = f"Girl: {script}"
 
     try:

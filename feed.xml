@@ -1,33 +1,31 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>電車少女 vs 出木杉 (Gemini Ed.)</title>
+    <title>香港早晨</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily HK News Analysis. Powered by Google Gemini.</description>
+    <description>HK News Analysis via Gemini AI.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Mon, 12 Jan 2026 02:34:07 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 02:41:15 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
-    <managingEditor>news@example.com (Tram Girl)</managingEditor>
-    <pubDate>Mon, 12 Jan 2026 10:34:07 +0800</pubDate>
-    <itunes:category text="News">
-      <itunes:category text="Daily News"/>
-    </itunes:category>
+    <managingEditor>news@ex.com (Tram Girl)</managingEditor>
+    <pubDate>Mon, 12 Jan 2026 10:41:15 +0800</pubDate>
+    <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
       <itunes:name>Tram Girl</itunes:name>
-      <itunes:email>news@example.com</itunes:email>
+      <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
       <title>晨早新聞: 2026-01-12</title>
-      <description><![CDATA[👧 系統故障。 
+      <description><![CDATA[電車少女: 今日系統發生嚴重故障。 
 
- 🤓 請檢查API日誌。...]]></description>
+ 出木杉: 我地聽日再嘗試啦。]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260112.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260112.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Mon, 12 Jan 2026 10:34:07 +0800</pubDate>
+      <pubDate>Mon, 12 Jan 2026 10:41:15 +0800</pubDate>
     </item>
   </channel>
 </rss>

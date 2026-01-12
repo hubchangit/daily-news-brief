@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>電車少女 vs 出木杉</title>
+    <title>電車少女 vs 出木杉 (Gemini Ed.)</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily HK News Analysis.</description>
+    <description>Daily HK News Analysis. Powered by Google Gemini.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Sun, 11 Jan 2026 22:44:47 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 12 Jan 2026 02:05:39 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@example.com (Tram Girl)</managingEditor>
-    <pubDate>Mon, 12 Jan 2026 06:44:47 +0800</pubDate>
+    <pubDate>Mon, 12 Jan 2026 10:05:39 +0800</pubDate>
     <itunes:category text="News">
       <itunes:category text="Daily News"/>
     </itunes:category>
@@ -21,27 +21,13 @@
       <itunes:email>news@example.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>晨早新聞分析: 2026-01-12</title>
-      <description><![CDATA[👧 你好呀，大家好，歡迎收聽我哋嘅HK News Podcast！我係你嘅主持，一個充满好奇心嘅女孩。 
+      <title>晨早新聞: 2026-01-12</title>
+      <description><![CDATA[👧 系統故障。 
 
- 🤓 大家好，我係Dekisugi，一個成日搵緊資料嘅小伙子。今日又會有咩新鮮事呢？ 
-
- 👧 呀哈，先講講今日嘅天氣啦。一股達強風程度嘅偏東氣流正影響廣東沿岸。同時，一道雲帶覆蓋該區。本港地區今日天氣預測：短暫時間有陽光。早上清涼。日間乾燥，最高氣溫約19度。吹和緩東至東北風，初時風勢清勁，離岸及高地間中吹強風。展望：隨後數日大致天晴，日間和暖及乾燥，但早上仍然清涼。 
-
- 🤓 听起來好似個天氣唔錯喎，適合外出行街或者做啲戶外活動。 
-
- 👧 說到新聞，有幾個重要嘅資訊要同大家分享下。首先，香港計劃於2028年前完成九龍海濱步道項目，將連接多個九龍海濱地點，總長度將延長維多利亞港兩岸行人徑。 
-
- 🤓 噉就更方便市民同遊客啦，可以更加享受海濱景觀。 
-
- 👧 對呀，不過有條新聞就比較沉重。根據一項研究顯示，去年通過香港福利團體危機熱線尋求輔導嘅詐騙受害者中，近三分之一可能有自殺傾向。 
-
- 🤓 唉，詐騙真係害人不淺，希望社會可以更加關注這些受害者嘅心理健康。 
-
- 👧 係呀，另...]]></description>
+ 🤓 請稍後再試。...]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260112.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260112.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Mon, 12 Jan 2026 06:44:47 +0800</pubDate>
+      <pubDate>Mon, 12 Jan 2026 10:05:39 +0800</pubDate>
     </item>
   </channel>
 </rss>

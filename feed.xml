@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Tue, 13 Jan 2026 15:52:09 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Jan 2026 22:53:15 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Tue, 13 Jan 2026 23:52:09 +0800</pubDate>
+    <pubDate>Wed, 14 Jan 2026 06:53:15 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -19,37 +19,53 @@
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>晨早新聞: 2026-01-13</title>
-      <description><![CDATA[電車少女: 嘩！各位聽眾早晨啊！電車少女同出木杉又同大家見面啦！勁開心呀！ 
+      <title>晨早新聞: 2026-01-14</title>
+      <description><![CDATA[電車少女: 各位聽眾早晨呀！ 
+
+ 電車少女: 又係我電車少女同出木杉同大家傾吓新聞！ 
+
+ 電車少女: 勁開心呀！ 
 
  出木杉: 大家好。 
 
- 電車少女: 嘩，今日個天勁靚喎，陽光普照㗎！ 
+ 電車少女: 嘩，今日勁清涼喎！ 
 
- 出木杉: 係呀，天文台話今日大致天晴，部分地區有煙霞，早上清涼約17度，日間乾燥最高21度，吹微風，間中吹東至東北風。 
+ 電車少女: 係咪轉季喇？ 
 
- 電車少女: 呀，出木杉，頭條話香港人勁撐控煙喎，係咪真㗎？ 
+ 出木杉: 係呀，一股東北季候風正為廣東沿岸帶來普遍晴朗及清涼天氣。 
 
- 出木杉: 係呀，有研究發現，近九成港人支持更嚴格嘅控煙措施，甚至建議提高煙草稅。 
+ 出木杉: 今日最高氣溫約21度。 
 
- 電車少女: 咁好囉，少啲人食煙空氣都清新啲！ 
+ 出木杉: 展望本週餘下時間至下週初持續大致天晴，早晚清涼。 
 
- 電車少女: 嘩，有位社運人士因為監獄唔俾女囚犯著短褲打官司喎，乜咁癲㗎？ 
+ 出木杉: 不過下週中後期氣溫會顯著下降，大家要留意。 
 
- 出木杉: 佢挑戰懲教署規定，話唔俾女囚犯著短褲係歧視，但最終輸咗司法覆核。 
+ 電車少女: 咁快又凍？ 
 
- 電車少女: 咁夏天咪熱死囉？慘慘豬！ 
+ 電車少女: 唔係掛？ 
 
- 電車少女: 唔係掛？新聞話差唔多四分一個學生冇AI就做唔到功課喎，佢哋係咪俾AI食晒腦呀？ 
+ 電車少女: 咁使唔使執定件羽絨呀？ 
 
- 出木杉: 報告指出，近95%學生有用AI寫功課，近四分一冇AI就做唔到，智庫建議設立統一AI平台。 
+ 出木杉: 另外，位於菲律賓以東之西北太平洋嘅低壓區正逐漸增強。 
 
- 電車少女: 咁第日考試係咪都要用AI計數㗎？癲㗎！ 
+ 出木杉: 一個熱帶氣旋似乎在形成中。 
 
- 電車少女: 呀，國際新聞，侵侵話考慮伊朗]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260113.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260113.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Tue, 13 Jan 2026 23:52:09 +0800</pubDate>
+ 電車少女: 喂，阿杉，頭條話香港好多人撐加強禁煙喎！ 
+
+ 電車少女: 勁呀！ 
+
+ 出木杉: 係呀，最新調查發現近九成香港居民支持更嚴格嘅控煙措施。 
+
+ 出木杉: 呢個顯示社會對減少吸煙有高度共識。 
+
+ 電車少女: 咁即係以後都冇得喺街食煙？ 
+
+ 電車少女: 到時會唔會連電子煙都唔俾食呀？ 
+
+ 電車少女: 癲㗎！ ]]></description>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260114.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260114.mp3" length="9000000" type="audio/mpeg"/>
+      <pubDate>Wed, 14 Jan 2026 06:53:15 +0800</pubDate>
     </item>
   </channel>
 </rss>

@@ -20,6 +20,8 @@ except:
 HKT = timezone(timedelta(hours=8))
 
 # VOICES
+# Girl: HiuGaai (We will tune her to be faster/higher)
+# Boy: WanLung (Standard)
 VOICE_FEMALE = "zh-HK-HiuGaaiNeural" 
 VOICE_MALE = "zh-HK-WanLungNeural"   
 
@@ -35,11 +37,18 @@ FEEDS_GLOBAL = [
 ]
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
-# 2. AUDIO ENGINE
+# 2. AUDIO ENGINE (Adjusted for Energy)
 # -----------------------------
 async def generate_line(text, voice, filename):
-    rate = "+10%" if voice == VOICE_FEMALE else "+0%"
-    communicate = edge_tts.Communicate(text, voice, rate=rate)
+    # TUNING STATION
+    if voice == VOICE_FEMALE:
+        rate = "+25%"  # Much faster = More energetic
+        pitch = "+2Hz" # Slightly higher = Brighter/Younger
+    else:
+        rate = "+0%"   # Keep Boy steady
+        pitch = "+0Hz"
+        
+    communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
     await communicate.save(filename)
 
 async def generate_dialogue_audio(script_text, output_file):
@@ -61,11 +70,10 @@ async def generate_dialogue_audio(script_text, output_file):
             voice = VOICE_FEMALE
             text = line.replace("電車少女:", "").replace("Girl:", "").strip()
         else:
-            # Fallback: If no name found, assume it's a continuation of previous or default to Girl
             voice = VOICE_FEMALE 
             text = line.strip()
         
-        # Cleanup: Remove asterisks and weird symbols, keep punctuation
+        # Cleanup
         text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！a-zA-Z]', '', text)
         if len(text) < 1: continue
 
@@ -77,7 +85,7 @@ async def generate_dialogue_audio(script_text, output_file):
             if os.path.exists(temp_filename) and os.path.getsize(temp_filename) > 0:
                 segment = AudioSegment.from_mp3(temp_filename)
                 combined_audio += segment
-                combined_audio += AudioSegment.silent(duration=350)
+                combined_audio += AudioSegment.silent(duration=400) # Slightly longer pause for digestion
                 temp_files.append(temp_filename)
                 valid_count += 1
         except Exception as e:
@@ -122,7 +130,7 @@ def run_janitor():
             try: os.remove(f)
             except: pass
 
-# 4. ROBUST AI BRAIN (Google -> Fallback to HF)
+# 4. ROBUST AI BRAIN
 # -----------------------------
 def get_weather():
     try:
@@ -134,61 +142,52 @@ def get_feeds(urls):
     content = ""
     count = 0
     for url in urls:
-        if count >= 4: break
+        if count >= 5: break # Increased limit to 5 items per category
         try:
             f = feedparser.parse(url)
             for item in f.entries:
-                if count >= 4: break
-                content += f"- {item.title}\n"
+                if count >= 5: break
+                # Get Description/Summary if available for more context
+                desc = getattr(item, 'summary', getattr(item, 'description', ''))
+                # Clean html tags crudely
+                desc = re.sub('<[^<]+?>', '', desc)[:150] 
+                content += f"- Headline: {item.title}\n  Context: {desc}\n"
                 count += 1
         except: pass
     return content
 
 def generate_script_robust(prompt):
-    # --- PHASE 1: GOOGLE GEMINI ---
+    # PHASE 1: GOOGLE GEMINI
     gemini_models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-pro"]
-    
     for m in gemini_models:
         try:
             print(f"🤖 Attempting Google Model: {m}...")
             model = genai.GenerativeModel(m)
             response = model.generate_content(prompt)
             text = response.text.replace("\n", " ").replace("**", "")
-            
-            # Credit Google
             return text + " | 電車少女: 本節目由 Google Gemini 支援製作。"
-            
         except Exception as e:
             print(f"⚠️ Google {m} failed: {e}")
             continue
 
-    # --- PHASE 2: HUGGING FACE FALLBACK ---
-    print("🚨 Google Gemini completely failed. Switching to Hugging Face Backup...")
+    # PHASE 2: HUGGING FACE FALLBACK
+    print("🚨 Switching to Hugging Face Backup...")
     try:
         hf_token = os.environ.get("HF_TOKEN")
-        if not hf_token:
-            print("❌ No HF_TOKEN found in secrets.")
-            raise Exception("No HF_TOKEN")
-
+        if not hf_token: raise Exception("No HF_TOKEN")
         client = InferenceClient(api_key=hf_token)
-        
-        # Using Qwen 2.5-72B (Great Chinese performance)
         messages = [{"role": "user", "content": prompt}]
         response = client.chat_completion(
             model="Qwen/Qwen2.5-72B-Instruct", 
             messages=messages, 
-            max_tokens=1000
+            max_tokens=1500 # Increased for longer script
         )
-        
         text = response.choices[0].message.content.replace("\n", " ").replace("**", "")
-        
-        # Credit Hugging Face
         return text + " | 電車少女: 本節目由 Hugging Face Qwen 支援製作。"
-        
     except Exception as e:
         print(f"❌ Hugging Face failed: {e}")
 
-    # --- PHASE 3: TOTAL FAILURE ---
+    # PHASE 3: TOTAL FAILURE
     return "電車少女: 今日系統發生嚴重故障。 | 出木杉: 我地聽日再嘗試啦。"
 
 def write_script(hk_news, global_news, weather):
@@ -196,23 +195,30 @@ def write_script(hk_news, global_news, weather):
     You are writing a script for "電車少女 & 出木杉" (Hong Kong News Podcast).
     
     **Characters:**
-    - "電車少女": Energetic, uses Hong Kong slang.
-    - "出木杉": Calm, analytical, intellectual.
+    - "電車少女": Young, very energetic, uses heavy HK slang/particles (e.g. 勁, 癲, 唔係掛, 㗎, 喎, 啫). She reacts emotionally to news.
+    - "出木杉": Calm, intellectual, analytical. He explains the deeper meaning.
 
     **Language:** Authentic Hong Kong Cantonese (廣東話口語).
     **Format:** One single line. Use "|" to separate speakers. No newlines.
-    **Constraint:** Start every sentence with the character name followed by a colon (e.g., 電車少女: ...).
+    **Constraint:** Start every sentence with "Character Name:".
 
-    **Content Structure:**
-    1. Intro: 電車少女 & 出木杉 greet listeners.
-    2. Weather: {weather}
-    3. HK News: {hk_news} (出木杉 analyzes).
-    4. Global News: {global_news} (Brief mention).
-    5. **English Corner**: Teach one useful English idiom or phrase related to today's news. Explain it in Cantonese.
-    6. Outro: Goodbye.
+    **Content Requirements:**
+    1. **Intro:** Quick energetic greeting.
+    2. **Weather:** Brief update ({weather}).
+    3. **News Segment (Select 5 distinct stories from below):**
+       - For each story, have a mini-conversation:
+       - Girl asks or comments on the headline (using slang).
+       - Boy explains the details/context.
+       - Girl gives a final reaction/joke.
+    4. **English Corner:** Teach one phrase related to the news.
+    5. **Outro:** Bye.
 
-    **Example Output:**
-    電車少女: 早晨！今日天氣點呀？ | 出木杉: 今日有雨，記得帶遮啦。 | 電車少女: 咁今日有咩新聞？ | 出木杉: 今日焦點係... | 電車少女: 係時候學英文啦！ | 出木杉: 今日嘅英文係 "Rain check"，即係改期咁解。
+    **Source Material:**
+    HK News: {hk_news}
+    Global News: {global_news}
+
+    **Tone Example:**
+    電車少女: 嘩！今日個天勁灰喎！ | 出木杉: 係呀，今日空氣質素健康指數爆標。 | 電車少女: 唔係掛？咁我要带口罩出街啦！
     """
     return generate_script_robust(prompt)
 
@@ -249,15 +255,15 @@ if __name__ == "__main__":
     now_str = datetime.now(HKT).strftime('%Y%m%d')
     final_mp3 = f"brief_{now_str}.mp3"
     
-    print("Fetching news...")
+    print("Fetching news (Deep Search)...")
     hk = get_feeds(FEEDS_HK)
     gl = get_feeds(FEEDS_GLOBAL)
     we = get_weather()
     
-    print("Generating script...")
+    print("Generating extended script...")
     script = write_script(hk, gl, we)
     
-    # Safety Check: Ensure the script starts with a character name
+    # Safety Check
     if "電車少女:" not in script and "出木杉:" not in script:
         script = f"電車少女: {script}"
     

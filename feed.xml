@@ -3,15 +3,15 @@
   <channel>
     <title>香港早晨</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>HK News Analysis via Gemini AI.</description>
+    <description>HK News Analysis (Powered by AI).</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Mon, 12 Jan 2026 22:42:46 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Jan 2026 01:27:24 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Tue, 13 Jan 2026 06:42:46 +0800</pubDate>
+    <pubDate>Tue, 13 Jan 2026 09:27:24 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,12 +20,38 @@
     </itunes:owner>
     <item>
       <title>晨早新聞: 2026-01-13</title>
-      <description><![CDATA[電車少女: 今日系統故障。 
+      <description><![CDATA[電車少女: 喂喂喂，各位早晨呀！又係我電車少女同埋型男出木杉哥哥同大家見面啦！ 
 
- 出木杉: 請檢查API設置。]]></description>
+ 出木杉: 各位聽眾早晨，多謝收聽。 
+
+ 電車少女: 出木杉哥哥，今日天氣點呀？我見朝早都幾涼喎。 
+
+ 出木杉: 係呀，根據天文台資料，廣東地區風勢微弱，天色大致良好。 
+
+ 出木杉: 而本港今日天氣預測大致天晴，但部分地區有煙霞。 
+
+ 出木杉: 早上清涼，日間乾燥，最高氣溫約23度，吹微風。 
+
+ 電車少女: 嘩，咁舒服呀！ 
+
+ 出木杉: 展望未來數日，大致天晴，日間和暖及乾燥，但早上仍然清涼，大家記得帶件外套早晚保暖。 
+
+ 電車少女: 明白晒！咁香港今日有咩猛料新聞呀？ 
+
+ 出木杉: 今日香港有幾個重點，首先係好消息，Operation Santa Claus透過游水做善事，真係改變咗好多人嘅生命。 
+
+ 出木杉: 其次科技方面，香港同南沙將會進行跨境試驗，目標係將大灣區打造成全球無人機行業嘅指標。 
+
+ 電車少女: 堅呀？咁咪好勁囉！ 
+
+ 出木杉: 不過今日最受關注嘅，可能都係黎智英案。 
+
+ 出木杉: 黎智英同其他社運人士嘅香港律師，正尋求減輕刑期。 
+
+ 出木杉: 但香港法官對於]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260113.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260113.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Tue, 13 Jan 2026 06:42:46 +0800</pubDate>
+      <pubDate>Tue, 13 Jan 2026 09:27:24 +0800</pubDate>
     </item>
   </channel>
 </rss>

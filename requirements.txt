@@ -3,3 +3,4 @@ edge-tts
 podgen
 pydub
 google-generativeai
+huggingface_hub

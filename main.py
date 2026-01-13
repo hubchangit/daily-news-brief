@@ -8,11 +8,15 @@ import google.generativeai as genai
 from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
 from pydub import AudioSegment
+from huggingface_hub import InferenceClient
 
 # 1. SETUP
 # -----------------------------
-api_key = os.environ.get("GEMINI_API_KEY")
-genai.configure(api_key=api_key)
+try:
+    genai.configure(api_key=os.environ["GEMINI_API_KEY"])
+except:
+    pass
+
 HKT = timezone(timedelta(hours=8))
 
 # VOICES
@@ -30,19 +34,6 @@ FEEDS_GLOBAL = [
     "https://www.theguardian.com/world/rss"
 ]
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
-
-# --- DEBUG: CHECK AVAILABLE MODELS ---
-# This prints what your API Key is actually allowed to see.
-print("🔍 SYSTEM CHECK: Checking available Gemini models...")
-try:
-    available_models = []
-    for m in genai.list_models():
-        if 'generateContent' in m.supported_generation_methods:
-            available_models.append(m.name)
-            print(f"   - Found: {m.name}")
-except Exception as e:
-    print(f"⚠️ SYSTEM CHECK FAILED: {e}")
-# -------------------------------------
 
 # 2. AUDIO ENGINE
 # -----------------------------
@@ -62,15 +53,20 @@ async def generate_dialogue_audio(script_text, output_file):
         line = line.strip()
         if not line: continue
         
-        # Match Chinese names OR English names
-        if "Dekisugi:" in line or "出木杉:" in line:
+        # STRICT NAME MATCHING
+        if "出木杉:" in line or "Dekisugi:" in line:
             voice = VOICE_MALE
-            text = line.replace("Dekisugi:", "").replace("出木杉:", "").strip()
-        else:
+            text = line.replace("出木杉:", "").replace("Dekisugi:", "").strip()
+        elif "電車少女:" in line or "Girl:" in line:
             voice = VOICE_FEMALE
-            text = line.replace("Girl:", "").replace("電車少女:", "").strip()
+            text = line.replace("電車少女:", "").replace("Girl:", "").strip()
+        else:
+            # Fallback: If no name found, assume it's a continuation of previous or default to Girl
+            voice = VOICE_FEMALE 
+            text = line.strip()
         
-        text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！]', '', text)
+        # Cleanup: Remove asterisks and weird symbols, keep punctuation
+        text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！a-zA-Z]', '', text)
         if len(text) < 1: continue
 
         temp_filename = f"temp_line_{i}.mp3"
@@ -126,7 +122,7 @@ def run_janitor():
             try: os.remove(f)
             except: pass
 
-# 4. CONTENT
+# 4. ROBUST AI BRAIN (Google -> Fallback to HF)
 # -----------------------------
 def get_weather():
     try:
@@ -149,39 +145,74 @@ def get_feeds(urls):
     return content
 
 def generate_script_robust(prompt):
-    # FALLBACK STRATEGY: Try the most stable model first
-    # gemini-pro (1.0) is the most widely supported model
-    models = ["gemini-pro", "gemini-1.5-flash"]
+    # --- PHASE 1: GOOGLE GEMINI ---
+    gemini_models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-pro"]
     
-    for m in models:
+    for m in gemini_models:
         try:
-            print(f"🤖 Trying model: {m}...")
+            print(f"🤖 Attempting Google Model: {m}...")
             model = genai.GenerativeModel(m)
             response = model.generate_content(prompt)
-            return response.text.replace("\n", " ").replace("**", "")
-        except Exception as e:
-            print(f"⚠️ Model {m} failed: {e}")
-            continue
+            text = response.text.replace("\n", " ").replace("**", "")
             
-    print("❌ All models failed.")
-    return "電車少女: 今日系統故障。 | 出木杉: 請檢查API設置。"
+            # Credit Google
+            return text + " | 電車少女: 本節目由 Google Gemini 支援製作。"
+            
+        except Exception as e:
+            print(f"⚠️ Google {m} failed: {e}")
+            continue
+
+    # --- PHASE 2: HUGGING FACE FALLBACK ---
+    print("🚨 Google Gemini completely failed. Switching to Hugging Face Backup...")
+    try:
+        hf_token = os.environ.get("HF_TOKEN")
+        if not hf_token:
+            print("❌ No HF_TOKEN found in secrets.")
+            raise Exception("No HF_TOKEN")
+
+        client = InferenceClient(api_key=hf_token)
+        
+        # Using Qwen 2.5-72B (Great Chinese performance)
+        messages = [{"role": "user", "content": prompt}]
+        response = client.chat_completion(
+            model="Qwen/Qwen2.5-72B-Instruct", 
+            messages=messages, 
+            max_tokens=1000
+        )
+        
+        text = response.choices[0].message.content.replace("\n", " ").replace("**", "")
+        
+        # Credit Hugging Face
+        return text + " | 電車少女: 本節目由 Hugging Face Qwen 支援製作。"
+        
+    except Exception as e:
+        print(f"❌ Hugging Face failed: {e}")
+
+    # --- PHASE 3: TOTAL FAILURE ---
+    return "電車少女: 今日系統發生嚴重故障。 | 出木杉: 我地聽日再嘗試啦。"
 
 def write_script(hk_news, global_news, weather):
     prompt = f"""
-    You are writing a script for "Tram Girl & Dekisugi" (Hong Kong News Podcast).
+    You are writing a script for "電車少女 & 出木杉" (Hong Kong News Podcast).
     
+    **Characters:**
+    - "電車少女": Energetic, uses Hong Kong slang.
+    - "出木杉": Calm, analytical, intellectual.
+
     **Language:** Authentic Hong Kong Cantonese (廣東話口語).
     **Format:** One single line. Use "|" to separate speakers. No newlines.
-    
-    **Content:**
-    1. Girl & Dekisugi Intro.
-    2. Weather: {weather}
-    3. HK News: {hk_news} (Dekisugi analyzes).
-    4. Global News: {global_news}.
-    5. Outro.
+    **Constraint:** Start every sentence with the character name followed by a colon (e.g., 電車少女: ...).
 
-    **Example:**
-    電車少女: 早晨！今日天氣點呀？ | 出木杉: 今日有雨，記得帶遮啦。
+    **Content Structure:**
+    1. Intro: 電車少女 & 出木杉 greet listeners.
+    2. Weather: {weather}
+    3. HK News: {hk_news} (出木杉 analyzes).
+    4. Global News: {global_news} (Brief mention).
+    5. **English Corner**: Teach one useful English idiom or phrase related to today's news. Explain it in Cantonese.
+    6. Outro: Goodbye.
+
+    **Example Output:**
+    電車少女: 早晨！今日天氣點呀？ | 出木杉: 今日有雨，記得帶遮啦。 | 電車少女: 咁今日有咩新聞？ | 出木杉: 今日焦點係... | 電車少女: 係時候學英文啦！ | 出木杉: 今日嘅英文係 "Rain check"，即係改期咁解。
     """
     return generate_script_robust(prompt)
 
@@ -191,7 +222,7 @@ def update_rss(audio_file, script):
     
     p = Podcast(
         name="香港早晨",
-        description="HK News Analysis via Gemini AI.",
+        description="HK News Analysis (Powered by AI).",
         website=base_url,
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
@@ -226,7 +257,9 @@ if __name__ == "__main__":
     print("Generating script...")
     script = write_script(hk, gl, we)
     
-    if "|" not in script: script = f"電車少女: {script}"
+    # Safety Check: Ensure the script starts with a character name
+    if "電車少女:" not in script and "出木杉:" not in script:
+        script = f"電車少女: {script}"
     
     try:
         asyncio.run(generate_dialogue_audio(script, "dialogue_raw.mp3"))

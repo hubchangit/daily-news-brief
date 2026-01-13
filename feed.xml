@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Tue, 13 Jan 2026 01:27:24 +0000</lastBuildDate>
+    <lastBuildDate>Tue, 13 Jan 2026 15:52:09 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Tue, 13 Jan 2026 09:27:24 +0800</pubDate>
+    <pubDate>Tue, 13 Jan 2026 23:52:09 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,38 +20,36 @@
     </itunes:owner>
     <item>
       <title>晨早新聞: 2026-01-13</title>
-      <description><![CDATA[電車少女: 喂喂喂，各位早晨呀！又係我電車少女同埋型男出木杉哥哥同大家見面啦！ 
+      <description><![CDATA[電車少女: 嘩！各位聽眾早晨啊！電車少女同出木杉又同大家見面啦！勁開心呀！ 
 
- 出木杉: 各位聽眾早晨，多謝收聽。 
+ 出木杉: 大家好。 
 
- 電車少女: 出木杉哥哥，今日天氣點呀？我見朝早都幾涼喎。 
+ 電車少女: 嘩，今日個天勁靚喎，陽光普照㗎！ 
 
- 出木杉: 係呀，根據天文台資料，廣東地區風勢微弱，天色大致良好。 
+ 出木杉: 係呀，天文台話今日大致天晴，部分地區有煙霞，早上清涼約17度，日間乾燥最高21度，吹微風，間中吹東至東北風。 
 
- 出木杉: 而本港今日天氣預測大致天晴，但部分地區有煙霞。 
+ 電車少女: 呀，出木杉，頭條話香港人勁撐控煙喎，係咪真㗎？ 
 
- 出木杉: 早上清涼，日間乾燥，最高氣溫約23度，吹微風。 
+ 出木杉: 係呀，有研究發現，近九成港人支持更嚴格嘅控煙措施，甚至建議提高煙草稅。 
 
- 電車少女: 嘩，咁舒服呀！ 
+ 電車少女: 咁好囉，少啲人食煙空氣都清新啲！ 
 
- 出木杉: 展望未來數日，大致天晴，日間和暖及乾燥，但早上仍然清涼，大家記得帶件外套早晚保暖。 
+ 電車少女: 嘩，有位社運人士因為監獄唔俾女囚犯著短褲打官司喎，乜咁癲㗎？ 
 
- 電車少女: 明白晒！咁香港今日有咩猛料新聞呀？ 
+ 出木杉: 佢挑戰懲教署規定，話唔俾女囚犯著短褲係歧視，但最終輸咗司法覆核。 
 
- 出木杉: 今日香港有幾個重點，首先係好消息，Operation Santa Claus透過游水做善事，真係改變咗好多人嘅生命。 
+ 電車少女: 咁夏天咪熱死囉？慘慘豬！ 
 
- 出木杉: 其次科技方面，香港同南沙將會進行跨境試驗，目標係將大灣區打造成全球無人機行業嘅指標。 
+ 電車少女: 唔係掛？新聞話差唔多四分一個學生冇AI就做唔到功課喎，佢哋係咪俾AI食晒腦呀？ 
 
- 電車少女: 堅呀？咁咪好勁囉！ 
+ 出木杉: 報告指出，近95%學生有用AI寫功課，近四分一冇AI就做唔到，智庫建議設立統一AI平台。 
 
- 出木杉: 不過今日最受關注嘅，可能都係黎智英案。 
+ 電車少女: 咁第日考試係咪都要用AI計數㗎？癲㗎！ 
 
- 出木杉: 黎智英同其他社運人士嘅香港律師，正尋求減輕刑期。 
-
- 出木杉: 但香港法官對於]]></description>
+ 電車少女: 呀，國際新聞，侵侵話考慮伊朗]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260113.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260113.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Tue, 13 Jan 2026 09:27:24 +0800</pubDate>
+      <pubDate>Tue, 13 Jan 2026 23:52:09 +0800</pubDate>
     </item>
   </channel>
 </rss>

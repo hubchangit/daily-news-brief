@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Tue, 13 Jan 2026 22:53:15 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 14 Jan 2026 22:51:26 +0000</lastBuildDate>
     <itunes:author>Tram Girl</itunes:author>
     <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Wed, 14 Jan 2026 06:53:15 +0800</pubDate>
+    <pubDate>Thu, 15 Jan 2026 06:51:26 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -19,53 +19,33 @@
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>晨早新聞: 2026-01-14</title>
-      <description><![CDATA[電車少女: 各位聽眾早晨呀！ 
-
- 電車少女: 又係我電車少女同出木杉同大家傾吓新聞！ 
-
- 電車少女: 勁開心呀！ 
+      <title>晨早新聞: 2026-01-15</title>
+      <description><![CDATA[電車少女: 喂喂喂！各位聽眾，又係我哋「電車少女」同埋「出木杉」啦！勁開心呀！ 
 
  出木杉: 大家好。 
 
- 電車少女: 嘩，今日勁清涼喎！ 
+ 電車少女: 嘩，今日個天好似一時多雲一時又會好番咁，仲要早上清涼喎，癲㗎！ 
 
- 電車少女: 係咪轉季喇？ 
+ 出木杉: 係呀，一股東北季候風正影響廣東，早上清涼，最高氣溫約21度，日間大致天晴同乾燥，仲有機會局部地區能見度較低；展望週末到下週初都大致天晴同溫暖，不過下週中後期就氣溫會顯著下降喇。 
 
- 出木杉: 係呀，一股東北季候風正為廣東沿岸帶來普遍晴朗及清涼天氣。 
+ 電車少女: 講到新聞，林峯取消日本演唱會呀？唔係掛？為乜勁呀？ 
 
- 出木杉: 今日最高氣溫約21度。 
+ 出木杉: 係呀，因為中日關係嘅摩擦，好多高調嘅娛樂活動都受影響，林峯今次都係其中之一。 
 
- 出木杉: 展望本週餘下時間至下週初持續大致天晴，早晚清涼。 
+ 電車少女: 唉，為咗政治搞到冇歌聽，真係冇癮到爆囉，激死人！ 
 
- 出木杉: 不過下週中後期氣溫會顯著下降，大家要留意。 
+ 電車少女: 喂，香港後生仔買資助房屋比例少咗一半咁多？癲咗呀？ 
 
- 電車少女: 咁快又凍？ 
+ 出木杉: 係呀，一項研究發現，30至39歲嘅年輕人擁有資助房屋嘅比例喺30年內近乎減半，反映佢哋嘅置業困難日益嚴重。 
 
- 電車少女: 唔係掛？ 
+ 電車少女: 咁咪即係叫我哋住公屋住到老囉，想點呀？政府係咪玩嘢呀？ 
 
- 電車少女: 咁使唔使執定件羽絨呀？ 
+ 電車少女: 嘩，海關掃毒拉咗62個人，仲要搜到四億幾毒品？勁呀！ 
 
- 出木杉: 另外，位於菲律賓以東之西北太平洋嘅低壓區正逐漸增強。 
-
- 出木杉: 一個熱帶氣旋似乎在形成中。 
-
- 電車少女: 喂，阿杉，頭條話香港好多人撐加強禁煙喎！ 
-
- 電車少女: 勁呀！ 
-
- 出木杉: 係呀，最新調查發現近九成香港居民支持更嚴格嘅控煙措施。 
-
- 出木杉: 呢個顯示社會對減少吸煙有高度共識。 
-
- 電車少女: 咁即係以後都冇得喺街食煙？ 
-
- 電車少女: 到時會唔會連電子煙都唔俾食呀？ 
-
- 電車少女: 癲㗎！ ]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260114.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260114.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Wed, 14 Jan 2026 06:53:15 +0800</pubDate>
+ 出木杉: 係呀，呢次係一次大型聯合行動，]]></description>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260115.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260115.mp3" length="9000000" type="audio/mpeg"/>
+      <pubDate>Thu, 15 Jan 2026 06:51:26 +0800</pubDate>
     </item>
   </channel>
 </rss>

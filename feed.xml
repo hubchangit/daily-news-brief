@@ -8,44 +8,22 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Wed, 14 Jan 2026 22:51:26 +0000</lastBuildDate>
-    <itunes:author>Tram Girl</itunes:author>
-    <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Thu, 15 Jan 2026 06:51:26 +0800</pubDate>
+    <lastBuildDate>Thu, 15 Jan 2026 14:15:03 +0000</lastBuildDate>
+    <itunes:author>Dekisugi</itunes:author>
+    <managingEditor>news@ex.com (Dekisugi)</managingEditor>
+    <pubDate>Thu, 15 Jan 2026 22:15:03 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
-      <itunes:name>Tram Girl</itunes:name>
+      <itunes:name>Dekisugi</itunes:name>
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
       <title>晨早新聞: 2026-01-15</title>
-      <description><![CDATA[電車少女: 喂喂喂！各位聽眾，又係我哋「電車少女」同埋「出木杉」啦！勁開心呀！ 
-
- 出木杉: 大家好。 
-
- 電車少女: 嘩，今日個天好似一時多雲一時又會好番咁，仲要早上清涼喎，癲㗎！ 
-
- 出木杉: 係呀，一股東北季候風正影響廣東，早上清涼，最高氣溫約21度，日間大致天晴同乾燥，仲有機會局部地區能見度較低；展望週末到下週初都大致天晴同溫暖，不過下週中後期就氣溫會顯著下降喇。 
-
- 電車少女: 講到新聞，林峯取消日本演唱會呀？唔係掛？為乜勁呀？ 
-
- 出木杉: 係呀，因為中日關係嘅摩擦，好多高調嘅娛樂活動都受影響，林峯今次都係其中之一。 
-
- 電車少女: 唉，為咗政治搞到冇歌聽，真係冇癮到爆囉，激死人！ 
-
- 電車少女: 喂，香港後生仔買資助房屋比例少咗一半咁多？癲咗呀？ 
-
- 出木杉: 係呀，一項研究發現，30至39歲嘅年輕人擁有資助房屋嘅比例喺30年內近乎減半，反映佢哋嘅置業困難日益嚴重。 
-
- 電車少女: 咁咪即係叫我哋住公屋住到老囉，想點呀？政府係咪玩嘢呀？ 
-
- 電車少女: 嘩，海關掃毒拉咗62個人，仲要搜到四億幾毒品？勁呀！ 
-
- 出木杉: 係呀，呢次係一次大型聯合行動，]]></description>
+      <description><![CDATA[早晨，歡迎收聽香港早晨。我是出木杉。  首先為大家帶來天氣資訊： 一股東北季候風正為廣東帶來普遍晴朗的天氣。 在下午八時，熱帶風暴洛鞍集結在馬尼拉之東南偏東約960公里，預料向西北移動，時速約10公里，在菲律賓以東海域徘徊。 本港地區今晚及明日天氣預測: 大致天晴。今晚及明日初時局部地區能見度較低。明早市區最低氣溫約17度，新界再低幾度，日間乾燥，最高氣溫約24度。吹輕微至和緩東至東北風。 展望: 隨後兩三日持續大致天晴，日間溫暖。星期二稍後氣溫顯著下降，風勢較大。  新聞方面，我哋首先關注屯門一宗警員開槍擊斃持刀男子的事件，引起廣泛關注。事發喺星期四晚大約七點，警方接報指一名男子喺屯門一個商場揮舞菜刀。警員到場處理期間，據報該名男子拒絕合作，並向警員揮舞手上嘅菜刀。警員多次警告無效後，為咗自身同市民安全，最終向該名男子開咗一槍。雖然男子即時送院搶救，但最終證實不治。呢宗事件再次引發公眾對警員使用武力嘅討論，尤其係喺處理精神問題或者情緒不穩人士時，應如何平衡執法同人道考慮。警方表示會深入調查事件經過，並會向死者家屬提供協助。我哋會繼續密切留意調查進展。  接著嚟睇睇其他新聞：  另外一]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260115.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260115.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Thu, 15 Jan 2026 06:51:26 +0800</pubDate>
+      <pubDate>Thu, 15 Jan 2026 22:15:03 +0800</pubDate>
     </item>
   </channel>
 </rss>

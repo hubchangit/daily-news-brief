@@ -20,12 +20,13 @@ except:
 HKT = timezone(timedelta(hours=8))
 
 # VOICES
-# Girl: HiuGaai (We will tune her to be faster/higher)
-# Boy: WanLung (Standard)
-VOICE_FEMALE = "zh-HK-HiuGaaiNeural" 
-VOICE_MALE = "zh-HK-WanLungNeural"   
+# SOLO HOST: Dekisugi (WanLung) - Calm, professional, "News Anchor" tone.
+VOICE = "zh-HK-WanLungNeural"
 
 # NEWS SOURCES
+# Added: Google Trends HK (Daily) to detect "Heat"
+FEED_TRENDS = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=HK"
+
 FEEDS_HK = [
     "https://www.scmp.com/rss/2/feed",
     "https://rss.stheadline.com/rss/realtime/hk.xml",
@@ -37,65 +38,54 @@ FEEDS_GLOBAL = [
 ]
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
-# 2. AUDIO ENGINE (Adjusted for Energy)
+# 2. AUDIO ENGINE (Solo Host)
 # -----------------------------
-async def generate_line(text, voice, filename):
-    # TUNING STATION
-    if voice == VOICE_FEMALE:
-        rate = "+25%"  # Much faster = More energetic
-        pitch = "+2Hz" # Slightly higher = Brighter/Younger
-    else:
-        rate = "+0%"   # Keep Boy steady
-        pitch = "+0Hz"
-        
-    communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
+async def generate_line(text, filename):
+    # Standard Speed (+0%) for professional delivery
+    communicate = edge_tts.Communicate(text, VOICE, rate="+0%")
     await communicate.save(filename)
 
-async def generate_dialogue_audio(script_text, output_file):
-    print("Generating Dialogue Audio...")
-    lines = script_text.split("|")
+async def generate_monologue_audio(script_text, output_file):
+    print("Generating Monologue...")
+    # Clean up the script to remove any remaining "Name:" tags just in case
+    clean_text = re.sub(r'^(出木杉|Dekisugi|電車少女|Girl|Anchor):', '', script_text)
+    
+    # Split by periods/punctuation to create natural pauses
+    # We don't split by "|" anymore since it's a monologue, but we respect sentences.
+    sentences = re.split(r'(?<=[.?!。？！])', script_text)
+    
     combined_audio = AudioSegment.empty()
     temp_files = []
-    valid_count = 0
 
-    for i, line in enumerate(lines):
-        line = line.strip()
-        if not line: continue
+    for i, sentence in enumerate(sentences):
+        sentence = sentence.strip()
+        if not sentence: continue
         
-        # STRICT NAME MATCHING
-        if "出木杉:" in line or "Dekisugi:" in line:
-            voice = VOICE_MALE
-            text = line.replace("出木杉:", "").replace("Dekisugi:", "").strip()
-        elif "電車少女:" in line or "Girl:" in line:
-            voice = VOICE_FEMALE
-            text = line.replace("電車少女:", "").replace("Girl:", "").strip()
-        else:
-            voice = VOICE_FEMALE 
-            text = line.strip()
-        
-        # Cleanup
+        # Remove markdown or speaker tags if the AI slipped them in
+        text = re.sub(r'^\w+:', '', sentence) 
         text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！a-zA-Z]', '', text)
         if len(text) < 1: continue
 
         temp_filename = f"temp_line_{i}.mp3"
         try:
-            print(f"Speaking ({voice}): {text[:10]}...")
-            await generate_line(text, voice, temp_filename)
+            print(f"Speaking: {text[:15]}...")
+            await generate_line(text, temp_filename)
             
             if os.path.exists(temp_filename) and os.path.getsize(temp_filename) > 0:
                 segment = AudioSegment.from_mp3(temp_filename)
                 combined_audio += segment
-                combined_audio += AudioSegment.silent(duration=400) # Slightly longer pause for digestion
+                # Add a breath pause (300ms) between sentences
+                combined_audio += AudioSegment.silent(duration=350)
                 temp_files.append(temp_filename)
-                valid_count += 1
         except Exception as e:
             print(f"Skipping line: {e}")
             continue
 
-    if valid_count == 0: raise Exception("Audio generation failed.")
+    if len(temp_files) == 0: raise Exception("Audio generation failed.")
     combined_audio.export(output_file, format="mp3")
     for f in temp_files:
-        if os.path.exists(f): os.remove(f)
+        try: os.remove(f)
+        except: pass
 
 def mix_music(voice_file, output_file):
     print("Mixing music...")
@@ -106,7 +96,8 @@ def mix_music(voice_file, output_file):
 
     try:
         voice = AudioSegment.from_mp3(voice_file)
-        bgm = AudioSegment.from_mp3("bgm.mp3") - 22
+        # Lower BGM volume slightly more for solo voice clarity (-24dB)
+        bgm = AudioSegment.from_mp3("bgm.mp3") - 24
         looped_bgm = bgm * (len(voice) // len(bgm) + 1)
         final_bgm = looped_bgm[:len(voice) + 4000].fade_out(3000)
         final_mix = final_bgm.overlay(voice, position=500)
@@ -138,20 +129,27 @@ def get_weather():
         return f.entries[0].description.replace('<br/>', ' ')[:300] if f.entries else "N/A"
     except: return "N/A"
 
+def get_trends():
+    try:
+        # Fetch Google Trends RSS
+        f = feedparser.parse(FEED_TRENDS)
+        trends = [item.title for item in f.entries[:8]] # Top 8 trends
+        return ", ".join(trends)
+    except:
+        return "None"
+
 def get_feeds(urls):
     content = ""
     count = 0
     for url in urls:
-        if count >= 5: break # Increased limit to 5 items per category
+        if count >= 8: break # Fetch more items to give the AI more choices to sort
         try:
             f = feedparser.parse(url)
             for item in f.entries:
-                if count >= 5: break
-                # Get Description/Summary if available for more context
+                if count >= 8: break
                 desc = getattr(item, 'summary', getattr(item, 'description', ''))
-                # Clean html tags crudely
                 desc = re.sub('<[^<]+?>', '', desc)[:150] 
-                content += f"- Headline: {item.title}\n  Context: {desc}\n"
+                content += f"- {item.title} (Context: {desc})\n"
                 count += 1
         except: pass
     return content
@@ -165,7 +163,7 @@ def generate_script_robust(prompt):
             model = genai.GenerativeModel(m)
             response = model.generate_content(prompt)
             text = response.text.replace("\n", " ").replace("**", "")
-            return text + " | 電車少女: 本節目由 Google Gemini 支援製作。"
+            return text + " 本節目由 Google Gemini 支援製作。"
         except Exception as e:
             print(f"⚠️ Google {m} failed: {e}")
             continue
@@ -180,45 +178,41 @@ def generate_script_robust(prompt):
         response = client.chat_completion(
             model="Qwen/Qwen2.5-72B-Instruct", 
             messages=messages, 
-            max_tokens=1500 # Increased for longer script
+            max_tokens=1500
         )
         text = response.choices[0].message.content.replace("\n", " ").replace("**", "")
-        return text + " | 電車少女: 本節目由 Hugging Face Qwen 支援製作。"
+        return text + " 本節目由 Hugging Face Qwen 支援製作。"
     except Exception as e:
         print(f"❌ Hugging Face failed: {e}")
+        return "今日系統故障，請稍後再試。"
 
-    # PHASE 3: TOTAL FAILURE
-    return "電車少女: 今日系統發生嚴重故障。 | 出木杉: 我地聽日再嘗試啦。"
-
-def write_script(hk_news, global_news, weather):
+def write_script(hk_news, global_news, weather, trends):
     prompt = f"""
-    You are writing a script for "電車少女 & 出木杉" (Hong Kong News Podcast).
+    You are "出木杉" (Dekisugi), a professional, calm, and intelligent News Anchor for Hong Kong.
     
-    **Characters:**
-    - "電車少女": Young, very energetic, uses heavy HK slang/particles (e.g. 勁, 癲, 唔係掛, 㗎, 喎, 啫). She reacts emotionally to news.
-    - "出木杉": Calm, intellectual, analytical. He explains the deeper meaning.
+    **Your Goal:** Select and read the top 3-4 news stories. 
+    **Crucial Sorting Rule:** You MUST prioritize news stories that match the following "Trending Keywords" (Social Heat):
+    [{trends}]
+    
+    If a news story matches a trending keyword, put it FIRST and discuss it in more depth. If no news matches the trends, select the most significant political or social headlines.
 
-    **Language:** Authentic Hong Kong Cantonese (廣東話口語).
-    **Format:** One single line. Use "|" to separate speakers. No newlines.
-    **Constraint:** Start every sentence with "Character Name:".
+    **Format:**
+    - Monologue (Single speaker).
+    - Authentic Hong Kong Cantonese (廣東話口語).
+    - Tone: Professional, analytical, but accessible (like a prime-time news anchor).
+    - No "Name:" tags needed, just write the script as a continuous flow.
 
-    **Content Requirements:**
-    1. **Intro:** Quick energetic greeting.
+    **Structure:**
+    1. **Intro:** "早晨，歡迎收聽香港早晨。我是出木杉。"
     2. **Weather:** Brief update ({weather}).
-    3. **News Segment (Select 5 distinct stories from below):**
-       - For each story, have a mini-conversation:
-       - Girl asks or comments on the headline (using slang).
-       - Boy explains the details/context.
-       - Girl gives a final reaction/joke.
-    4. **English Corner:** Teach one phrase related to the news.
-    5. **Outro:** Bye.
+    3. **Top Story (Trending/Popular):** Deep dive into the most discussed topic.
+    4. **Other News:** 2-3 quick headlines.
+    5. **English Corner:** Pick ONE useful English idiom related to the top story. Explain it clearly in Cantonese.
+    6. **Outro:** "多謝收聽，聽朝見。"
 
-    **Source Material:**
+    **Source Data:**
     HK News: {hk_news}
     Global News: {global_news}
-
-    **Tone Example:**
-    電車少女: 嘩！今日個天勁灰喎！ | 出木杉: 係呀，今日空氣質素健康指數爆標。 | 電車少女: 唔係掛？咁我要带口罩出街啦！
     """
     return generate_script_robust(prompt)
 
@@ -233,8 +227,8 @@ def update_rss(audio_file, script):
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
         language="zh-hk",
-        authors=[Person("Tram Girl", "news@ex.com")],
-        owner=Person("Tram Girl", "news@ex.com"),
+        authors=[Person("Dekisugi", "news@ex.com")],
+        owner=Person("Dekisugi", "news@ex.com"),
         category=Category("News"),
     )
     
@@ -242,7 +236,7 @@ def update_rss(audio_file, script):
     p.add_episode(Episode(
         title=f"晨早新聞: {now.strftime('%Y-%m-%d')}",
         media=Media(f"{base_url}/{audio_file}", 9000000, type="audio/mpeg"),
-        summary=script.replace("|", "\n\n")[:500],
+        summary=script[:500],
         publication_date=now,
     ))
     p.rss_file('feed.xml')
@@ -255,20 +249,19 @@ if __name__ == "__main__":
     now_str = datetime.now(HKT).strftime('%Y%m%d')
     final_mp3 = f"brief_{now_str}.mp3"
     
-    print("Fetching news (Deep Search)...")
+    print("Fetching news & trends...")
     hk = get_feeds(FEEDS_HK)
     gl = get_feeds(FEEDS_GLOBAL)
     we = get_weather()
+    tr = get_trends()
     
-    print("Generating extended script...")
-    script = write_script(hk, gl, we)
+    print(f"Top Trends today: {tr}")
     
-    # Safety Check
-    if "電車少女:" not in script and "出木杉:" not in script:
-        script = f"電車少女: {script}"
+    print("Generating monologue script...")
+    script = write_script(hk, gl, we, tr)
     
     try:
-        asyncio.run(generate_dialogue_audio(script, "dialogue_raw.mp3"))
+        asyncio.run(generate_monologue_audio(script, "dialogue_raw.mp3"))
         mix_music("dialogue_raw.mp3", final_mp3)
         update_rss(final_mp3, script)
         print("Done!")

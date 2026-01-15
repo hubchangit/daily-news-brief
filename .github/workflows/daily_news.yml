@@ -1,16 +1,21 @@
 name: Daily Podcast
+
 on:
   schedule:
     # Runs at 22:15 UTC (6:15 AM Hong Kong Time)
     - cron: '15 22 * * *'
   workflow_dispatch: # Allows you to click "Run Now" manually
 
+# This section fixes the "403 Permission Denied" error
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      
+
       - name: Install FFmpeg
         run: sudo apt-get install -y ffmpeg
 

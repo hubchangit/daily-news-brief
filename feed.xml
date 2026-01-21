@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Tue, 20 Jan 2026 22:50:35 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 21 Jan 2026 23:01:52 +0000</lastBuildDate>
     <itunes:author>Dekisugi</itunes:author>
     <managingEditor>news@ex.com (Dekisugi)</managingEditor>
-    <pubDate>Wed, 21 Jan 2026 06:50:35 +0800</pubDate>
+    <pubDate>Thu, 22 Jan 2026 07:01:52 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -19,11 +19,11 @@
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>晨早新聞: 2026-01-21</title>
-      <description><![CDATA[早晨，歡迎收聽香港早晨。我是出木杉。  首先為大家帶來今早的天氣資訊： 強烈冬季季候風正為華南沿岸地區帶來寒冷的天氣。同時，一道廣闊雲帶覆蓋廣東。 在上午五時，熱帶低氣壓洛鞍集結在馬尼拉之東北偏東約1320公里，預料向東南移動，時速約15公里，橫過菲律賓以東海域並逐漸消散。 本港地區今日天氣預測： 大致多雲。早晚寒冷。日間短暫時間有陽光及乾燥，氣溫回升至17度左右。吹和緩至清勁北至東北風，初時離岸間中吹強風。 展望：未來一兩日大致多雲，天氣持續寒冷，市區最低氣溫在十度左右。  今早的頭條消息，首先為大家帶來一宗引起社會高度關注的案件：本港警方最近就一宗網上瘋傳的虐兒指控，拘捕了兩名女子。據了解，事件緣於一名父親在社交媒體上公開指控其家庭傭工，涉嫌大力搖晃他四個月大的嬰兒。這宗指控迅速在網上引起廣泛關注，不少市民都對事件感到震驚和憤怒。警方接獲報案後迅速展開調查，並採取拘捕行動，以涉嫌虐兒罪拘捕涉案人士。這宗案件再次提醒我們，兒童保護工作的重要性，以及作為家長和照顧者，我們必須時刻警惕，確保兒童在一個安全健康的環境中成長。同時，網絡資訊的快速傳播，亦令這類事件能更快浮出水面，引起公眾關注]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260121.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260121.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Wed, 21 Jan 2026 06:50:35 +0800</pubDate>
+      <title>晨早新聞: 2026-01-22</title>
+      <description><![CDATA[早晨，歡迎收聽香港早晨。我是出木杉。  首先，我哋睇睇今日嘅天氣情況。受冬季季候風影響，本港今早寒冷，大部分地區氣溫下降至12度或以下。同時，一道廣闊雲帶覆蓋華南。  本港地區今日天氣預測：多雲，早晚寒冷。日間最高氣溫約15度。吹和緩至清勁北至東北風。  展望：明日大致多雲，天氣仍然寒冷。週末早上仍然相當清涼，下週初氣溫逐步回升。大家出門記得著多件衫，注意保暖喇。  ---  今日我哋首先要關注嘅，係一宗可能涉及跨境走私嘅健康安全疑雲。本港有兩間化驗所，被指懷疑捲入跨境走私孕婦血樣本嘅事件。消息指，衛生部門正深入調查，係咪有內地孕婦嘅血液樣本，被非法人肉帶嚟香港，再交俾本地嘅化驗所進行所謂嘅「無創產前檢測」或者其他相關檢測。  呢件事牽涉到嘅問題其實好廣泛，首先係公共衞生方面嘅風險，因為呢啲血液樣本如果冇經過正規嘅程序運輸同處理，會唔會帶嚟傳染病風險呢？另外，醫學道德同個人私隱都係一大關注點。究竟呢啲測試係咪喺符合所有醫學倫理規範下進行？點樣保障到孕婦同埋胎兒嘅私隱權利？仲有就係，如果證實有走私成分，呢就係一個嚴肅嘅跨境違法行為，會對香港嘅法律制度同埋醫療行業嘅聲譽造成好大嘅衝擊。  ]]></description>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260122.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260122.mp3" length="9000000" type="audio/mpeg"/>
+      <pubDate>Thu, 22 Jan 2026 07:01:52 +0800</pubDate>
     </item>
   </channel>
 </rss>

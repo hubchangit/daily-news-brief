@@ -34,10 +34,16 @@ jobs:
           HF_TOKEN: ${{ secrets.HF_TOKEN }}
         run: python main.py
 
-      - name: Commit and Push
+- name: Commit and Push
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add feed.xml *.mp3
-          git commit -m "Update Podcast" || echo "No changes to commit"
+          
+          # 1. Force remove any leftover temp files from the repo if they snuck in
+          git rm -f temp_line_*.mp3 || true
+          
+          # 2. Stage ALL changes (New episode + Deletion of old episodes)
+          git add -A
+          
+          git commit -m "Update Podcast: Auto-cleanup" || echo "No changes to commit"
           git push

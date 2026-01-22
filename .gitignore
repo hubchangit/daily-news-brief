@@ -1,0 +1,8 @@
+# Ignore temporary audio parts
+temp_line_*.mp3
+dialogue_raw.mp3
+bgm.wav
+
+# Keep the final result, but ignore Python cache
+__pycache__/
+*.pyc

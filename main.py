@@ -4,6 +4,7 @@ import asyncio
 import edge_tts
 import re
 import glob
+import requests
 import google.generativeai as genai
 from datetime import datetime, timedelta, timezone
 from podgen import Podcast, Episode, Media, Person, Category
@@ -19,14 +20,11 @@ except:
 
 HKT = timezone(timedelta(hours=8))
 
-# VOICES
-# SOLO HOST: Dekisugi (WanLung) - Calm, professional, "News Anchor" tone.
+# VOICE: WanLung (Professional yet conversational)
 VOICE = "zh-HK-WanLungNeural"
 
 # NEWS SOURCES
-# Added: Google Trends HK (Daily) to detect "Heat"
 FEED_TRENDS = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=HK"
-
 FEEDS_HK = [
     "https://www.scmp.com/rss/2/feed",
     "https://rss.stheadline.com/rss/realtime/hk.xml",
@@ -38,21 +36,31 @@ FEEDS_GLOBAL = [
 ]
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
 
-# 2. AUDIO ENGINE (Solo Host)
+# DEFAULT BGM (Royalty Free News Lo-Fi)
+DEFAULT_BGM_URL = "https://github.com/hubchangit/daily-news-brief/raw/main/bgm.mp3" 
+# ^ Note: If this 404s, the script tries to run without music. 
+# Ideally, you should upload your own 'bgm.mp3' to your repo. 
+# For now, I'll add a check to download a placeholder if missing.
+
+# 2. AUDIO ENGINE (Natural Flow)
 # -----------------------------
 async def generate_line(text, filename):
-    # Standard Speed (+0%) for professional delivery
+    # Rate +0% is standard.
+    # We rely on the script writing ("口語") to provide the casual feel.
     communicate = edge_tts.Communicate(text, VOICE, rate="+0%")
     await communicate.save(filename)
 
 async def generate_monologue_audio(script_text, output_file):
     print("Generating Monologue...")
-    # Clean up the script to remove any remaining "Name:" tags just in case
-    clean_text = re.sub(r'^(出木杉|Dekisugi|電車少女|Girl|Anchor):', '', script_text)
     
-    # Split by periods/punctuation to create natural pauses
-    # We don't split by "|" anymore since it's a monologue, but we respect sentences.
-    sentences = re.split(r'(?<=[.?!。？！])', script_text)
+    # 1. Pre-processing: Remove AI artifacts
+    clean_text = re.sub(r'\*+', '', script_text) # Remove bold stars
+    clean_text = re.sub(r'\(.*?\)', '', clean_text) # Remove instructions in brackets
+    
+    # 2. Smart Splitting for Natural Pauses
+    # Split by Full Stops (。) or Question Marks (？) or Exclamation (！)
+    # We treat Commas (，) as part of the sentence flow, handled by TTS engine naturally.
+    sentences = re.split(r'(?<=[。？！.?!])', clean_text)
     
     combined_audio = AudioSegment.empty()
     temp_files = []
@@ -61,9 +69,8 @@ async def generate_monologue_audio(script_text, output_file):
         sentence = sentence.strip()
         if not sentence: continue
         
-        # Remove markdown or speaker tags if the AI slipped them in
-        text = re.sub(r'^\w+:', '', sentence) 
-        text = re.sub(r'[^\w\s\u4e00-\u9fff,.?!，。？！a-zA-Z]', '', text)
+        # Filter out "Speaker Name" tags if they exist
+        text = re.sub(r'^.*?[:：]', '', sentence).strip()
         if len(text) < 1: continue
 
         temp_filename = f"temp_line_{i}.mp3"
@@ -74,8 +81,13 @@ async def generate_monologue_audio(script_text, output_file):
             if os.path.exists(temp_filename) and os.path.getsize(temp_filename) > 0:
                 segment = AudioSegment.from_mp3(temp_filename)
                 combined_audio += segment
-                # Add a breath pause (300ms) between sentences
-                combined_audio += AudioSegment.silent(duration=350)
+                
+                # Dynamic Pause:
+                # If the sentence was very short (< 2 sec), shorter pause.
+                # If long, standard pause.
+                pause_duration = 450 if len(segment) > 2000 else 300
+                combined_audio += AudioSegment.silent(duration=pause_duration)
+                
                 temp_files.append(temp_filename)
         except Exception as e:
             print(f"Skipping line: {e}")
@@ -83,44 +95,94 @@ async def generate_monologue_audio(script_text, output_file):
 
     if len(temp_files) == 0: raise Exception("Audio generation failed.")
     combined_audio.export(output_file, format="mp3")
+    
+    # Cleanup
     for f in temp_files:
         try: os.remove(f)
         except: pass
 
+def ensure_bgm():
+    # Helper to make sure we have music
+    if os.path.exists("bgm.mp3"):
+        return True
+    
+    print("bgm.mp3 not found. Downloading default...")
+    try:
+        # Using a reliable placeholder URL (You can change this)
+        # This is a generic free jazz/news loop.
+        url = "https://upload.wikimedia.org/wikipedia/commons/e/e7/News_Theme_Swish.wav" 
+        # Note: Wav works too, pydub handles it.
+        r = requests.get(url)
+        with open("bgm.wav", "wb") as f:
+            f.write(r.content)
+        # Convert to mp3 for consistency
+        AudioSegment.from_wav("bgm.wav").export("bgm.mp3", format="mp3")
+        return True
+    except Exception as e:
+        print(f"Could not download BGM: {e}")
+        return False
+
 def mix_music(voice_file, output_file):
     print("Mixing music...")
-    if not os.path.exists("bgm.mp3"):
+    has_music = ensure_bgm()
+
+    if not has_music:
+        print("No music available. Exporting voice only.")
         if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
         return
 
     try:
         voice = AudioSegment.from_mp3(voice_file)
-        # Lower BGM volume slightly more for solo voice clarity (-24dB)
-        bgm = AudioSegment.from_mp3("bgm.mp3") - 24
+        bgm = AudioSegment.from_mp3("bgm.mp3")
+        
+        # Tuning Volume:
+        # Voice is usually loud, BGM needs to be background.
+        bgm = bgm - 20 # Lower BGM by 20dB
+        
+        # Loop BGM
         looped_bgm = bgm * (len(voice) // len(bgm) + 1)
+        
+        # Trim to fit voice + 4 seconds intro/outro
         final_bgm = looped_bgm[:len(voice) + 4000].fade_out(3000)
+        
+        # Overlay: Start voice after 0.5s of music
         final_mix = final_bgm.overlay(voice, position=500)
+        
         final_mix.export(output_file, format="mp3")
         if os.path.exists(voice_file): os.remove(voice_file)
-    except:
+    except Exception as e:
+        print(f"Mixing failed ({e}). Exporting raw voice.")
         if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
 
-# 3. JANITOR
+# 3. JANITOR (AGGRESSIVE CLEANUP)
 # -----------------------------
 def run_janitor():
+    print("🧹 Janitor starting cleanup...")
     now_hk = datetime.now(HKT)
-    todays = f"brief_{now_hk.strftime('%Y%m%d')}.mp3"
+    todays_file = f"brief_{now_hk.strftime('%Y%m%d')}.mp3"
+    
+    # 1. Clean up old episodes (Delete anything that isn't TODAY's brief)
+    # We look for ANY mp3 starting with 'brief_'
     for f in glob.glob("brief_*.mp3"):
-        if f != todays:
-            try: os.remove(f)
-            except: pass
-    for pat in ["temp_*.mp3", "dialogue_raw.mp3"]:
-        for f in glob.glob(pat):
-            try: os.remove(f)
-            except: pass
+        if f != todays_file:
+            try:
+                os.remove(f)
+                print(f"Deleted old episode: {f}")
+            except Exception as e:
+                print(f"Failed to delete {f}: {e}")
 
+    # 2. Clean up temp junk
+    # Delete anything matching the temp patterns
+    junk_patterns = ["temp_line_*.mp3", "dialogue_raw.mp3", "bgm.wav"]
+    for pattern in junk_patterns:
+        for f in glob.glob(pattern):
+            try:
+                os.remove(f)
+                print(f"Deleted junk: {f}")
+            except: pass
+                
 # 4. ROBUST AI BRAIN
 # -----------------------------
 def get_weather():
@@ -131,18 +193,16 @@ def get_weather():
 
 def get_trends():
     try:
-        # Fetch Google Trends RSS
         f = feedparser.parse(FEED_TRENDS)
-        trends = [item.title for item in f.entries[:8]] # Top 8 trends
+        trends = [item.title for item in f.entries[:8]]
         return ", ".join(trends)
-    except:
-        return "None"
+    except: return "None"
 
 def get_feeds(urls):
     content = ""
     count = 0
     for url in urls:
-        if count >= 8: break # Fetch more items to give the AI more choices to sort
+        if count >= 8: break
         try:
             f = feedparser.parse(url)
             for item in f.entries:
@@ -163,7 +223,7 @@ def generate_script_robust(prompt):
             model = genai.GenerativeModel(m)
             response = model.generate_content(prompt)
             text = response.text.replace("\n", " ").replace("**", "")
-            return text + " 本節目由 Google Gemini 支援製作。"
+            return text
         except Exception as e:
             print(f"⚠️ Google {m} failed: {e}")
             continue
@@ -181,36 +241,39 @@ def generate_script_robust(prompt):
             max_tokens=1500
         )
         text = response.choices[0].message.content.replace("\n", " ").replace("**", "")
-        return text + " 本節目由 Hugging Face Qwen 支援製作。"
+        return text
     except Exception as e:
         print(f"❌ Hugging Face failed: {e}")
-        return "今日系統故障，請稍後再試。"
+        return "各位早晨，今日系統出現咗少少故障，請原諒。我地聽日再見。"
 
 def write_script(hk_news, global_news, weather, trends):
+    # STRONG INSTRUCTIONS FOR CANTONESE COLLOQUIALISM
     prompt = f"""
-    You are "出木杉" (Dekisugi), a professional, calm, and intelligent News Anchor for Hong Kong.
+    You are "出木杉" (Dekisugi), a friendly Hong Kong News Podcaster.
     
-    **Your Goal:** Select and read the top 3-4 news stories. 
-    **Crucial Sorting Rule:** You MUST prioritize news stories that match the following "Trending Keywords" (Social Heat):
-    [{trends}]
+    **CRITICAL LANGUAGE REQUIREMENT:**
+    - You MUST speak in **Authentic Hong Kong Cantonese Colloquialism (廣東話口語)**.
+    - **DO NOT** use Written Chinese (書面語).
+    - **DO NOT** use phrases like "是", "的", "今天", "早上好".
+    - **USE** phrases like "係", "嘅", "今日", "早晨", "搞掂", "睇下", "話時話".
+    - Make it sound like a friend chatting, not a robot reading a press release.
+
+    **Task:**
+    Create a news podcast script based on the trending topics and news below.
+
+    **Priorities:**
+    1. Check these **Trending Keywords**: [{trends}]. If any news matches these, talk about it FIRST.
+    2. Then cover 2-3 other major headlines.
     
-    If a news story matches a trending keyword, put it FIRST and discuss it in more depth. If no news matches the trends, select the most significant political or social headlines.
+    **Script Structure (Continuous Monologue):**
+    1. **Intro:** Casual energetic greeting (e.g., "哈囉大家好，又係我出木杉陪大家睇新聞...").
+    2. **Weather:** Quick check ({weather}).
+    3. **Deep Dive:** The hottest trending topic. Explain it simply.
+    4. **Roundup:** Quick fire other news.
+    5. **English Corner:** Teach one ONE slang/idiom related to the news. Explain it in Cantonese.
+    6. **Outro:** "好啦，今日講住咁多先，聽朝見！"
 
-    **Format:**
-    - Monologue (Single speaker).
-    - Authentic Hong Kong Cantonese (廣東話口語).
-    - Tone: Professional, analytical, but accessible (like a prime-time news anchor).
-    - No "Name:" tags needed, just write the script as a continuous flow.
-
-    **Structure:**
-    1. **Intro:** "早晨，歡迎收聽香港早晨。我是出木杉。"
-    2. **Weather:** Brief update ({weather}).
-    3. **Top Story (Trending/Popular):** Deep dive into the most discussed topic.
-    4. **Other News:** 2-3 quick headlines.
-    5. **English Corner:** Pick ONE useful English idiom related to the top story. Explain it clearly in Cantonese.
-    6. **Outro:** "多謝收聽，聽朝見。"
-
-    **Source Data:**
+    **News Data:**
     HK News: {hk_news}
     Global News: {global_news}
     """
@@ -221,8 +284,8 @@ def update_rss(audio_file, script):
     base_url = f"https://{repo.split('/')[0]}.github.io/{repo.split('/')[1]}"
     
     p = Podcast(
-        name="香港早晨",
-        description="HK News Analysis (Powered by AI).",
+        name="香港早晨 (HK Morning)",
+        description="Daily Cantonese News Briefing (AI Generated).",
         website=base_url,
         explicit=False,
         image="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png",
@@ -257,7 +320,7 @@ if __name__ == "__main__":
     
     print(f"Top Trends today: {tr}")
     
-    print("Generating monologue script...")
+    print("Generating colloquial script...")
     script = write_script(hk, gl, we, tr)
     
     try:

@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>香港早晨</title>
+    <title>香港早晨 (HK Morning)</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>HK News Analysis (Powered by AI).</description>
+    <description>Daily Cantonese News Briefing (AI Generated).</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Wed, 21 Jan 2026 23:01:52 +0000</lastBuildDate>
+    <lastBuildDate>Thu, 22 Jan 2026 09:43:42 +0000</lastBuildDate>
     <itunes:author>Dekisugi</itunes:author>
     <managingEditor>news@ex.com (Dekisugi)</managingEditor>
-    <pubDate>Thu, 22 Jan 2026 07:01:52 +0800</pubDate>
+    <pubDate>Thu, 22 Jan 2026 17:43:42 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,10 +20,10 @@
     </itunes:owner>
     <item>
       <title>晨早新聞: 2026-01-22</title>
-      <description><![CDATA[早晨，歡迎收聽香港早晨。我是出木杉。  首先，我哋睇睇今日嘅天氣情況。受冬季季候風影響，本港今早寒冷，大部分地區氣溫下降至12度或以下。同時，一道廣闊雲帶覆蓋華南。  本港地區今日天氣預測：多雲，早晚寒冷。日間最高氣溫約15度。吹和緩至清勁北至東北風。  展望：明日大致多雲，天氣仍然寒冷。週末早上仍然相當清涼，下週初氣溫逐步回升。大家出門記得著多件衫，注意保暖喇。  ---  今日我哋首先要關注嘅，係一宗可能涉及跨境走私嘅健康安全疑雲。本港有兩間化驗所，被指懷疑捲入跨境走私孕婦血樣本嘅事件。消息指，衛生部門正深入調查，係咪有內地孕婦嘅血液樣本，被非法人肉帶嚟香港，再交俾本地嘅化驗所進行所謂嘅「無創產前檢測」或者其他相關檢測。  呢件事牽涉到嘅問題其實好廣泛，首先係公共衞生方面嘅風險，因為呢啲血液樣本如果冇經過正規嘅程序運輸同處理，會唔會帶嚟傳染病風險呢？另外，醫學道德同個人私隱都係一大關注點。究竟呢啲測試係咪喺符合所有醫學倫理規範下進行？點樣保障到孕婦同埋胎兒嘅私隱權利？仲有就係，如果證實有走私成分，呢就係一個嚴肅嘅跨境違法行為，會對香港嘅法律制度同埋醫療行業嘅聲譽造成好大嘅衝擊。  ]]></description>
+      <description><![CDATA[哈囉大家好，又係我出木杉陪大家睇新聞！嘩，今日真係凍到呢，個身都硬晒！大家有冇著多件衫呀？我呢就三件衫加條頸巾，都仲係覺得有啲涼浸浸咁。  講起天氣呢，個天文台都提大家，冬季季候風繼續發威，所以今晚同聽朝都仲係幾凍㗎！市區最低氣溫大約十二度，新界仲會再低兩三度添！不過好彩嘅係，日間就會有番啲陽光，會比較乾爽，最高氣溫上到十七度咁啦。仲會吹住和緩嘅東北風，初頭風勢可能會間中大少少。展望就係，星期六朝早都係相當清涼，但係之後兩三日氣溫會回升番少少，不過星期日又會大風返喎。所以大家真係要睇住個天氣，咪凍親呀！  好啦，講返啲新聞。今日有單新聞真係聽完都替佢痛。講緊有個地盤工人呀，喺政府地盤做嘢嗰陣，唔小心失足跌低，結果呢，pat pat 插咗落枝鋼筋度！嘩，諗起都打冷震！成個人跌咗落去，枝鋼筋貫穿咗佢嘅臀部，真係好得人驚！勞工處家下就調查緊單嘢。大佬呀，地盤工友真係搏命錢，出嚟搵食都唔容易，希望佢早日康復啦，公司都要做好啲安全措施呀，唔係點得㗎！呢啲意外真係可免則免！  跟住又有單嘢，好多香港人都可能分唔清，話時話我以前都試過。有個調查話，差唔多四成香港人呢，根本分唔到中成藥同保健產品有乜分]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260122.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260122.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Thu, 22 Jan 2026 07:01:52 +0800</pubDate>
+      <pubDate>Thu, 22 Jan 2026 17:43:42 +0800</pubDate>
     </item>
   </channel>
 </rss>

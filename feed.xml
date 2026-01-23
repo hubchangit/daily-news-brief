@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Fri, 23 Jan 2026 07:32:22 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 23 Jan 2026 08:24:54 +0000</lastBuildDate>
     <itunes:author>AI Team</itunes:author>
     <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 15:32:22 +0800</pubDate>
+    <pubDate>Fri, 23 Jan 2026 16:24:54 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,20 +20,36 @@
     </itunes:owner>
     <item>
       <title>香港早晨: 2026-01-23</title>
-      <description><![CDATA[電車少女: 各位香港早晨嘅聽眾，早晨呀！活力充沛嘅電車少女又同大家見面啦！今日同我哋一齊嘅，當然就係我哋嘅知識寶庫，出木杉啦！ 
+      <description><![CDATA[電車少女: 嘩！香港早晨嘅各位聽眾，早晨啊！又係我電車少女同出木杉陪你哋展開新一日啦！勁呀！ 
 
- 出木杉: 大家好，歡迎收聽香港早晨。  電車少女: 係呀！今日天氣點先？等出木杉話俾大家知！ 
+ 出木杉: 早晨，各位。 
 
- 出木杉: 今日天氣預測：東北季候風正影響華南。同時，一道廣闊雲帶覆蓋該區。本港地區下午及今晚天氣預測: 大致多雲。下午部分時間天色明朗及乾燥。吹和緩東北風。展望: 明早仍然相當清涼，日間部分時間有陽光，氣溫回升。星期日風勢較大，隨後一兩日較為潮濕。  電車少女: 嘩！今日終於有陽光啦！不過都係咁凍，大家記得著多件衫呀！咁今日有咩熱話先？ 
+ 電車少女: 今日天氣點呀？我見朝早有啲涼喎。 
 
- 出木杉: 今日嘅頭條熱話，係關於潮玩Labubu嘅生產商Pop Mart。佢哋嘅股價呢個禮拜勁升咗 23%，因為佢哋啲潮玩好受歡迎，仲俾官媒點名讚，令投資者信心大增。  電車少女: 嘩！23%！勁呀！我上次去Pop Mart排隊都排到傻，啲Labubu真係好得意！不過點解會突然升咁多㗎？ 
+ 出木杉: 今日天氣方面，東北季候風正影響華南，同時，一道廣闊雲帶覆蓋該區。 
 
- 出木杉: 其實係因為佢哋嘅產品設計新穎，加上市場對潮流玩物需求大增，同埋內地媒體正面報道，令投資者信心大增，所以股價先有咁強勁嘅升幅。  電車少女: 原來係咁！真係潮玩無敵呀！咁香港仲有啲咩新聞呢？ 
+ 電車少女: 吓？即係點呀？ 
 
- 出木杉: 嚟睇下一條本地新聞。有政府資助嘅青年宿舍即將關閉，搞到好多住客都好徬徨，擔心要搬返劏房。  電車少女: 唔係]]></description>
+ 出木杉: 簡單講，本港地區今晚及明日會大致多雲。明早市區最低氣溫約14度，新界再低幾度，部分地區會寒冷。 
+
+ 電車少女: 嘩，要着多件衫啦！ 
+
+ 出木杉: 係。不過日間部分時間會有陽光及乾燥，最高氣溫約19度。吹和緩東北風，漸轉吹東風。 
+
+ 電車少女: 聽落都ok吖，唔會好濕。 
+
+ 出木杉: 展望星期日風勢較大，隨後一兩日會大致多雲，較為潮濕。大家出門記得留意天氣變化。  電車少女: 喂，出木杉，最近有單新聞真係勁爆！Labubu呢隻嘢紅到癲咗，啲股票仲升到23 percent，你知唔知呀？ 
+
+ 出木杉: 當然知道。「Labubu」製造商Pop Mart股價在星期五急升，本周累計升幅達23 percent，主要受惠於新玩具趨勢及官方媒體的關注。這反映了潮流玩具市場的潛力。 
+
+ 電車少女: 嘩，23 percent呀！買到就發啦！唔係掛？咁多人都鍾意呢隻公仔咩？ 
+
+ 出木杉: 的確，潮流玩具近年在全球範圍內都受到追捧，它的設計、限量發售策略以及收藏價值都是其成功的原因。 
+
+ ]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 15:32:22 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 16:24:54 +0800</pubDate>
     </item>
   </channel>
 </rss>

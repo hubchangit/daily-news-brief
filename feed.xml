@@ -1,55 +1,47 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>HK Morning Brief</title>
+    <title>香港早晨</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily News: HK, Global &amp; Tech.</description>
+    <description>HK News Analysis (Powered by AI).</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Fri, 23 Jan 2026 06:18:44 +0000</lastBuildDate>
-    <itunes:author>AI Team</itunes:author>
-    <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 14:18:44 +0800</pubDate>
+    <lastBuildDate>Fri, 23 Jan 2026 06:44:24 +0000</lastBuildDate>
+    <itunes:author>Tram Girl</itunes:author>
+    <managingEditor>news@ex.com (Tram Girl)</managingEditor>
+    <pubDate>Fri, 23 Jan 2026 14:44:24 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
-      <itunes:name>AI Team</itunes:name>
+      <itunes:name>Tram Girl</itunes:name>
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>早晨新聞: 2026-01-23</title>
-      <description><![CDATA[電車少女: 嘩！各位聽眾早晨呀！又係「電車少女」同「出木杉」陪你開展美好一日啦！
+      <title>晨早新聞: 2026-01-23</title>
+      <description><![CDATA[電車少女:嘩！各位觀眾聽眾，大家好呀！電車少女同出木杉又返嚟啦！勁興奮呀今日！
 
- 出木杉: 大家好，歡迎收聽。  出木杉: 今日天氣預測，受東北季候風影響，華南地區，包括我哋香港，大致多雲。
+出木杉:大家好。今日香港受東北季候風影響，普遍多雲，部分時間天色明朗及乾燥。預計明早天氣仍然相當清涼，日間氣溫會回升。星期日風勢較大，之後一兩日就轉為潮濕。
 
- 下午部分時間天色明朗同乾燥。吹和緩東北風。 電車少女: 吓？即係仲係有啲涼涼地啦？
+電車少女:嘩，咁即係聽日仲要著多件衫喎！唔係掛，又凍又乾，塊面會裂㗎喎！
 
- 最好就係下午有太陽晒吓，咁咪唔會咁陰濕囉！ 出木杉: 展望明早仍然相當清涼，但日間部分時間有陽光，氣溫會回升。
+電車少女:出木杉！你知唔知最近Labubu勁hit呀？Pop Mart啲股票癲咗咁升喎，乜事呀？
 
- 星期日風勢會比較大，之後一兩日就會較為潮濕。 電車少女: 哦，即係聽日都仲要著多件衫，但個太陽會出嚟！
+出木杉:嗯，Pop Mart股價確實在這星期內急升了23%，主要是因為公司CEO接受了官媒訪問，市場對其發展前景充滿信心，特別是Labubu這個IP的受歡迎程度。
 
- 到星期日就變大風，下星期初就濕笠笠喇，記住呀大家！  出木杉: 首先講吓近期熱爆嘅話題，就係Labubu盲盒公仔製造商Pop Mart嘅股價大升。
+電車少女:哇，原來係咁呀！潮物真係可以帶動經濟㗎喎，勁啊！
 
- 呢個禮拜已經升咗23個巴仙，CEO仲上埋節目，搞到大家對佢哋公司信心爆棚。 電車少女: 嘩！Labubu呀！我都有儲架！
+電車少女:喂，講開又講，廉署又拉人喎，係咪又有大茶飯呀？
 
- 唔怪得之啲人排隊排到癲啦，原來佢哋公司咁勁㗎！
+出木杉:廉政公署最近拘捕了14人，包括一間上市清潔服務公司的高級經理，涉嫌貪污。這再次提醒我們，香港社會對誠信的要求依然很高。
 
- 真係潮人必備呀嘛，次次出新款都秒殺㗎！ 出木杉: 轉個頭講返啲比較嚴肅嘅新聞。
+電車少女:唉，又係呢啲，搞到我都冇晒心機。希望香港可以少啲貪污啦，真係好影響市容㗎！
 
- 廉政公署最近就拘捕咗14個人，當中包括一間上市公司嘅3個職員，涉嫌賄賂。 電車少女: 喂，又有啲咁嘅事？
-
- 啲人真係貪心到咁？
-
- 邊間公司咁衰呀？
-
- 又係收錢做衰嘢喇？ 出木杉: 其實呢單嘢都唔係單一事件。
-
- 另一篇報道就講到，香港喺樓宇維修方面嘅貪污問題，一直都好]]></description>
+電車少女:講到經濟，財爺陳茂波話香港經濟冇有怕喎，但又話美國嗰邊啲政策好波動]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 14:18:44 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 14:44:24 +0800</pubDate>
     </item>
   </channel>
 </rss>

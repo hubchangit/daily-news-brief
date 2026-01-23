@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Fri, 23 Jan 2026 10:21:06 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 23 Jan 2026 11:15:41 +0000</lastBuildDate>
     <itunes:author>AI Team</itunes:author>
     <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 18:21:06 +0800</pubDate>
+    <pubDate>Fri, 23 Jan 2026 19:15:41 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,14 +20,54 @@
     </itunes:owner>
     <item>
       <title>早晨！Deep Dive (01/23)</title>
-      <description><![CDATA[Tram Girl: 今日個AI傻咗呀！
+      <description><![CDATA[Tram Girl: 嘩！今日凍冰冰，又係早起身嘅日子！好肚餓呀...
 
-Dekisugi: 系統故障，唯有聽日再見。
+Dekisugi: 早晨各位「香港早晨」嘅觀眾。Tram Girl，今日天氣報告指，明早巿區最低氣溫約14度，日間部分時間有陽光，天氣乾燥。非常適合食早餐。
+
+Dekisugi: 今日重點新聞，首先我哋會深入探討港車南下計劃。
+
+Dekisugi: 港車南下計劃實施一個月，香港運輸署已經收到超過2,500宗申請。這反映了初步反應良好，為廣東省司機經港珠澳大橋進入香港提供了便利。
+
+Tram Girl: 吓？得2,500宗？唔係掛？我以為會世一多人申請㗎喎！係咪好少咋？
+
+Dekisugi: Tram Girl，2,500宗申請，以首月而言，數字尚算合理。這證明了政策具有一定吸引力，同時亦需要時間讓更多人了解和適應。運輸署表示會繼續留意申請情況。
+
+Tram Girl: 咁啲人係咪用嚟返香港食飯㗎？定係去買嘢？如果用嚟買餸，咪好方便囉？
+
+Dekisugi: 這項政策目標是促進兩地交流及旅遊便利，主要方便廣東省司機駕駛私家車進入香港進行商務、探親或旅遊等活動。相信確實會為部分人士帶來便利。
+
+Tram Girl: 哦... 即係我哋香港人唔可以咁樣揸車上去啦？幾時到我哋呀？
+
+Dekisugi: 目前這個是「南向」計劃，主要針對廣東省居民。至於「港車北上」計劃，則仍待進一步公布詳情。我們會持續為大家追蹤。
+
+Dekisugi: 接下來，我哋睇下國際焦點。
+
+Dekisugi: 首先，美國前總統特朗普指責北約部隊在阿富汗戰爭中迴避前線，言論在英國引起強烈反響，英國軍方曾有457名士兵在衝突中犧牲。
+
+Dekisugi: 另外，特朗普亦突然取消加拿大出席「和平委員會」的邀請，此前加拿大總理曾就美國領導的全球秩序發出警告。
+
+Dekisugi: 轉到科技界最新消息。
+
+Tram Girl: 嘩，有咩新嘢玩呀？有冇得自動幫我執屋呀？
+
+Dekisugi: Tram Girl，雖然暫時未有自動執屋的AI，但微軟的經典應用程式Paint和Notepad，正加入AI功能。Paint現在可以製作AI填色圖畫，讓用戶輕鬆創作數碼插圖。
+
+Tram Girl: 填色圖畫？咁癲？我哋細個嗰陣邊有咁方便㗎！咁咪好啱啲懶人囉？
+
+Dekisugi: 的確，AI的應用讓藝術創作變得更普及和便捷。這將為用戶帶來全新的體驗。
+
+Tram Girl: 今日真係學到好多嘢呀！不過都係咁肚餓！我準備落街食早餐喇！
+
+Dekisugi: 感謝各位收看「香港早晨」。
+
+Dekisugi: 聽日再見！
+
+Tram Girl: 聽日見！食早餐先！
 
 ]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 18:21:06 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 19:15:41 +0800</pubDate>
     </item>
   </channel>
 </rss>

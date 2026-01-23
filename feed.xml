@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Fri, 23 Jan 2026 01:56:15 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 23 Jan 2026 02:13:32 +0000</lastBuildDate>
     <itunes:author>AI Team</itunes:author>
     <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 09:56:15 +0800</pubDate>
+    <pubDate>Fri, 23 Jan 2026 10:13:32 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -20,30 +20,36 @@
     </itunes:owner>
     <item>
       <title>早晨新聞: 2026-01-23</title>
-      <description><![CDATA[電車少女: 嘩！各位聽眾朋友仔，朝早好呀！ 
+      <description><![CDATA[電車少女: 喂，大家好！歡迎收聽《電車少女同出木杉亂噏廿四》！ 
 
- 出木杉: 大家好，又係我哋電車少女同出木杉，同大家分享下今日嘅大事。  電車少女: 今日有咩新鮮事，等我哋同大家逐一同你哋爆吓先！ 
+ 出木杉: 喂，大家好。又係我哋啦。  電車少女: 出木杉，今日凍到震呀！快啲講吓今日天氣點，等我知點著衫！ 
 
- 出木杉: 輕鬆吓，聽吓新聞。  出木杉: 今日香港天氣呢，受冬季季候風影響，華南地區比較寒冷。 
+ 出木杉: 好，等我哋睇吓天文台最新天氣報告先。 
 
- 出木杉: 同時，一道廣闊雲帶覆蓋該區。 出木杉: 本港地區今日天氣預測係大致多雲。 
+ 出木杉: 冬季季候風正為華南帶來寒冷天氣。同時，一道廣闊雲帶覆蓋該區。 
 
- 出木杉: 早上寒冷，日間部分時間天色明朗及乾燥。 出木杉: 吹和緩北至東北風。 
+ 出木杉: 本港地區今日天氣預測：大致多雲。早上寒冷，日間部分時間天色明朗及乾燥。吹和緩北至東北風。 
 
- 出木杉: 展望明早仍然相當清涼，日間部分時間有陽光，氣溫回升。 出木杉: 隨後兩三日大致多雲，星期日風勢較大。 電車少女: 嘩，聽到都覺得凍呀！出木杉，你今日著咗幾多件衫呀？ 
+ 電車少女: 嘩，真係凍到呢！ 
 
- 出木杉: 夠暖就得。大家都要記得著多件衫，咪凍親呀。  出木杉: 講到香港新聞，最近有個好熱門嘅話題，就係廉政公署又出動喇。 
+ 出木杉: 展望：明早仍然相當清涼，日間部分時間有陽光，氣溫回升，隨後兩三日大致多雲，星期日風勢較大。 
 
- 出木杉: 佢哋拉咗14個人，當中包括一間上市公司嘅3個員工，涉嫌賄賂。 電車少女: 嘩！又係「貪污」呢兩個字呀？堅係屢見不鮮喎！ 
+ 電車少女: 即係話，聽日都仲係要包到實一實啦，仲有機會有陽光添！正！  電車少女: 講到香港呢，最近有個嘢好hit呀！出木杉你知唔知邊間cafe出咗個「芝麻湯圓拿鐵」？啲人排晒隊去飲呀！ 
 
- 電車少女: 啲公司會唔會做清潔服務都搞到咁複雜㗎？ 出木杉: 呢單嘢係關於一間上市公司嘅高級經理同其他13個人，涉及清潔服務嘅賄賂。 
+ 出木杉: 係呀，最近個個IG都係佢，芝麻湯圓加咖啡，聽落都幾特別。唔怪得咁多人去試啦。 
 
- 出木杉: 廉署話要徹查到底。 電車少女: 哇，咁嚴重？即係啲清潔公司都會有內鬼收錢囉？ 
+ 電車少女: 係囉！不過講到香港新聞，聽講廉政公署又做嘢喎？ 
 
- 出木杉: 係呀，所以廉署真係要好好調查，保障返市場]]></description>
+ 出木杉: 係。廉政公署最近拘捕咗14個人，當中包括一間上市清潔服務公司嘅3名員工，懷疑佢哋涉及貪污賄賂。 
+
+ 電車少女: 吓？！清潔公司都有得貪？點搞㗎？ 
+
+ 出木杉: 據消息指，佢哋可能透過賄賂，喺承接或執行清潔服務合約時獲取不法利益。呢啲案涉及公司內部嘅舞弊行為。 
+
+ ]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 09:56:15 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 10:13:32 +0800</pubDate>
     </item>
   </channel>
 </rss>

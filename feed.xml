@@ -1,29 +1,49 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>香港早晨 (HK Morning)</title>
+    <title>HK Morning Brief</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily Cantonese News Briefing (AI Generated).</description>
+    <description>Daily News: HK, Global &amp; Tech.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Thu, 22 Jan 2026 22:55:46 +0000</lastBuildDate>
-    <itunes:author>Dekisugi</itunes:author>
-    <managingEditor>news@ex.com (Dekisugi)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 06:55:46 +0800</pubDate>
+    <lastBuildDate>Fri, 23 Jan 2026 01:56:15 +0000</lastBuildDate>
+    <itunes:author>AI Team</itunes:author>
+    <managingEditor>news@ex.com (AI Team)</managingEditor>
+    <pubDate>Fri, 23 Jan 2026 09:56:15 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
-      <itunes:name>Dekisugi</itunes:name>
+      <itunes:name>AI Team</itunes:name>
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>晨早新聞: 2026-01-23</title>
-      <description><![CDATA[哈囉大家好，又係我出木杉，陪大家睇下今日有乜嘢新聞值得我哋傾下啦！  天氣速遞 嘩，今朝真係凍到震呀！話說今朝呀，受到個冬季季候風影響呢，香港真係好凍呀，好多地方都跌到十二度或者以下喇。仲有呀，一大片雲就遮住咗成個華南地區喇。  咁今日香港嘅天氣預測呢，就大致都係多雲嘅。朝早凍冰冰，但日頭有時會見到陽光，仲會幾乾燥添，最高都係十七度左右啦。吹和緩嘅北至東北風，開頭可能間中會大風少少。睇埋未來幾日呀，聽朝都仲係好涼爽㗎，不過日頭有陽光，氣溫都會慢慢升返。跟住嗰兩三日呢，就大致多雲啦，到星期日呢，個風就可能會大返少少㗎喇。大家記得著多件衫呀，咪凍親！  今日熱話：Blackpink效應谷經濟！ 話時話，講起開心嘢，K-pop天團Blackpink嚟香港開演唱會呀嘛！呢個消息一出呢，好多fans都癲晒啦！不過除咗fans開心之外呢，原來對香港嘅經濟都好有幫助㗎！  有分析話呢，Blackpink今次喺啟德體育園開演唱會，可以為香港帶嚟兩億港紙嘅經濟效益呀！嘩，兩億呀！真係唔少嘢喎！呢啲就係所謂嘅「演唱會經濟」啦，唔單止啲門票錢，仲有酒店、食肆、交通、周邊商品咁，全部都旺晒！咁睇嚟呢，多啲呢啲]]></description>
+      <title>早晨新聞: 2026-01-23</title>
+      <description><![CDATA[電車少女: 嘩！各位聽眾朋友仔，朝早好呀！ 
+
+ 出木杉: 大家好，又係我哋電車少女同出木杉，同大家分享下今日嘅大事。  電車少女: 今日有咩新鮮事，等我哋同大家逐一同你哋爆吓先！ 
+
+ 出木杉: 輕鬆吓，聽吓新聞。  出木杉: 今日香港天氣呢，受冬季季候風影響，華南地區比較寒冷。 
+
+ 出木杉: 同時，一道廣闊雲帶覆蓋該區。 出木杉: 本港地區今日天氣預測係大致多雲。 
+
+ 出木杉: 早上寒冷，日間部分時間天色明朗及乾燥。 出木杉: 吹和緩北至東北風。 
+
+ 出木杉: 展望明早仍然相當清涼，日間部分時間有陽光，氣溫回升。 出木杉: 隨後兩三日大致多雲，星期日風勢較大。 電車少女: 嘩，聽到都覺得凍呀！出木杉，你今日著咗幾多件衫呀？ 
+
+ 出木杉: 夠暖就得。大家都要記得著多件衫，咪凍親呀。  出木杉: 講到香港新聞，最近有個好熱門嘅話題，就係廉政公署又出動喇。 
+
+ 出木杉: 佢哋拉咗14個人，當中包括一間上市公司嘅3個員工，涉嫌賄賂。 電車少女: 嘩！又係「貪污」呢兩個字呀？堅係屢見不鮮喎！ 
+
+ 電車少女: 啲公司會唔會做清潔服務都搞到咁複雜㗎？ 出木杉: 呢單嘢係關於一間上市公司嘅高級經理同其他13個人，涉及清潔服務嘅賄賂。 
+
+ 出木杉: 廉署話要徹查到底。 電車少女: 哇，咁嚴重？即係啲清潔公司都會有內鬼收錢囉？ 
+
+ 出木杉: 係呀，所以廉署真係要好好調查，保障返市場]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 06:55:46 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 09:56:15 +0800</pubDate>
     </item>
   </channel>
 </rss>

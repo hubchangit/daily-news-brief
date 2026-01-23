@@ -20,8 +20,8 @@ except: pass
 HKT = timezone(timedelta(hours=8))
 
 # VOICES (The Duo)
-VOICE_FEMALE = "zh-HK-HiuGaaiNeural" # Tram Girl (High Energy)
-VOICE_MALE = "zh-HK-WanLungNeural"   # Dekisugi (Professional)
+VOICE_FEMALE = "zh-HK-HiuGaaiNeural" # Tram Girl
+VOICE_MALE = "zh-HK-WanLungNeural"   # Dekisugi
 
 # NEWS SOURCES
 FEED_TRENDS = "https://trends.google.com/trends/trendingsearches/daily/rss?geo=HK"
@@ -44,11 +44,12 @@ REPO_BGM_URL = "https://github.com/hubchangit/daily-news-brief/raw/main/bgm.mp3"
 # 2. AUDIO ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
+    # Both voices tuned to 1.2x speed (+20%)
     if voice == VOICE_FEMALE:
         rate = "+20%" 
         pitch = "+2Hz"
     else:
-        rate = "+0%"
+        rate = "+20%" # Tuned up for WanLung too
         pitch = "+0Hz"
         
     communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
@@ -57,8 +58,8 @@ async def generate_line(text, voice, filename):
 async def generate_dialogue_audio(script_text, output_file):
     print("Generating Dialogue Audio...")
     
-    # Feature Restored: Robust Cleaning
-    clean_text = re.sub(r'\*\*|##', '', script_text) # Remove Markdown bolding
+    # 1. Cleaning: Remove bolding and markdown
+    clean_text = re.sub(r'\*\*|##', '', script_text)
     lines = clean_text.split("|")
     
     combined_audio = AudioSegment.empty()
@@ -68,19 +69,24 @@ async def generate_dialogue_audio(script_text, output_file):
         line = line.strip()
         if not line: continue
         
-        # Detect Speaker
-        if "出木杉:" in line or "Dekisugi:" in line:
+        # 2. Detect Speaker & STRIP NAMES
+        # We use regex to remove "Name:" or "Name：" from the start of the line
+        if "出木杉" in line or "Dekisugi" in line:
             voice = VOICE_MALE
-            text = re.sub(r'^(出木杉|Dekisugi)[:：]', '', line).strip()
-        elif "電車少女:" in line or "Tram Girl:" in line:
+            # Remove the name label
+            text = re.sub(r'^(出木杉|Dekisugi)[:：]?', '', line).strip()
+        elif "電車少女" in line or "Tram Girl" in line:
             voice = VOICE_FEMALE
-            text = re.sub(r'^(電車少女|Tram Girl)[:：]', '', line).strip()
+            # Remove the name label
+            text = re.sub(r'^(電車少女|Tram Girl)[:：]?', '', line).strip()
         else:
             voice = VOICE_MALE if len(line) > 30 else VOICE_FEMALE
             text = line
             
-        # Remove instructions ( )
+        # 3. Final cleanup of instructions (e.g. "(laugh)")
         text = re.sub(r'\(.*?\)', '', text).strip()
+        
+        # If text is empty after cleaning, skip it
         if len(text) < 1: continue
 
         temp_filename = f"temp_line_{i}.mp3"
@@ -92,8 +98,7 @@ async def generate_dialogue_audio(script_text, output_file):
                 segment = AudioSegment.from_mp3(temp_filename)
                 combined_audio += segment
                 
-                # Feature Restored: Dynamic Pausing
-                # If short sentence (reaction), short pause. If long, breath pause.
+                # Dynamic Pausing
                 pause_ms = 450 if len(segment) > 2500 else 250
                 combined_audio += AudioSegment.silent(duration=pause_ms)
                 
@@ -113,7 +118,7 @@ def ensure_bgm():
     if os.path.exists("bgm.mp3"): return True
     print("Downloading BGM...")
     
-    # Feature Restored: Try User Repo First
+    # Try User Repo First
     try:
         print(f"Attempting custom BGM from: {REPO_BGM_URL}")
         r = requests.get(REPO_BGM_URL)
@@ -124,7 +129,7 @@ def ensure_bgm():
     except:
         print("Custom BGM not found. Trying fallback...")
 
-    # Fallback to Kevin MacLeod (Reliable Public Domain)
+    # Fallback to Kevin MacLeod
     try:
         url = "https://upload.wikimedia.org/wikipedia/commons/5/5b/Kevin_MacLeod_-_Local_Forecast_-_Elevator.ogg"
         r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -139,14 +144,16 @@ def ensure_bgm():
 def mix_music(voice_file, output_file):
     print("Mixing music...")
     if not ensure_bgm():
-        # If all music fails, just output voice
         if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
         return
 
     try:
         voice = AudioSegment.from_mp3(voice_file)
-        bgm = AudioSegment.from_mp3("bgm.mp3") - 18 # Background volume
+        bgm = AudioSegment.from_mp3("bgm.mp3") 
+        
+        # Volume: 30% softer than before (-18dB -> -25dB)
+        bgm = bgm - 25
         
         loop_count = len(voice) // len(bgm) + 2
         bgm_looped = bgm * loop_count
@@ -156,7 +163,6 @@ def mix_music(voice_file, output_file):
         final_mix.export(output_file, format="mp3")
         if os.path.exists(voice_file): os.remove(voice_file)
     except:
-        # Fallback if mixing crashes
         if os.path.exists(output_file): os.remove(output_file)
         os.rename(voice_file, output_file)
 
@@ -204,7 +210,6 @@ def get_feeds(urls, limit=6):
     return content
 
 def generate_script_robust(prompt):
-    # Feature Restored: Support for Gemini 2.5
     models = ["gemini-2.5-flash", "gemini-1.5-flash", "gemini-pro"]
     for m in models:
         try:
@@ -216,7 +221,6 @@ def generate_script_robust(prompt):
             print(f"⚠️ {m} Failed: {e}")
             continue
 
-    # Hugging Face Fallback
     try:
         print("🚨 Using HuggingFace Backup...")
         client = InferenceClient(api_key=os.environ["HF_TOKEN"])

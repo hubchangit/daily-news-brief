@@ -44,7 +44,7 @@ REPO_BGM_URL = "https://github.com/hubchangit/daily-news-brief/raw/main/bgm.mp3"
 # 2. AUDIO ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # SPEED: 1.2x for both
+    # SPEED: 1.2x for both (Standard HK fast pace)
     if voice == VOICE_FEMALE:
         rate = "+20%" 
         pitch = "+2Hz"
@@ -58,43 +58,53 @@ async def generate_line(text, voice, filename):
 async def generate_dialogue_audio(script_text, output_file):
     print("Generating Dialogue Audio...")
     
-    # 1. Global Clean
-    clean_text = re.sub(r'\*\*|##', '', script_text)
+    # 1. Super Clean First
+    # Remove bolding (**), italics (__), and weird invisible chars
+    clean_text = script_text.replace("**", "").replace("__", "").replace("##", "")
     lines = clean_text.split("|")
     
     combined_audio = AudioSegment.empty()
     temp_files = []
     
-    # Memory for speaker persistence
+    # Default start (just in case)
     current_voice = VOICE_FEMALE 
 
     for i, line in enumerate(lines):
         line = line.strip()
         if not line: continue
         
-        # 2. STRICT SPEAKER DETECTION (Regex)
-        # Detects "Name:" at start of line
-        if re.match(r'^\s*(?:出木杉|Dekisugi)\s*[:：]', line):
+        # 2. ROBUST SPEAKER DETECTION
+        # We search for the name *anywhere* in the first 20 characters
+        # This fixes the issue where " **Tram Girl**:" or "1. Tram Girl:" broke the parser.
+        
+        lower_line = line[:30].lower() # Look at start of line
+        
+        is_boy = "出木杉" in line or "dekisugi" in lower_line
+        is_girl = "電車少女" in line or "tram girl" in lower_line or "girl" in lower_line
+
+        if is_boy:
             current_voice = VOICE_MALE
-            text = re.sub(r'^\s*(?:出木杉|Dekisugi)\s*[:：]\s*', '', line)
-        elif re.match(r'^\s*(?:電車少女|Girl|Tram Girl)\s*[:：]', line):
+            # REMOVE THE NAME LABEL (Aggressive)
+            # Regex removes "Name" + any characters until the colon/space
+            text = re.sub(r'^.*?(出木杉|Dekisugi).*?[:：]', '', line, flags=re.IGNORECASE)
+        elif is_girl:
             current_voice = VOICE_FEMALE
-            text = re.sub(r'^\s*(?:電車少女|Girl|Tram Girl)\s*[:：]\s*', '', line)
+            text = re.sub(r'^.*?(電車少女|Tram Girl|Girl).*?[:：]', '', line, flags=re.IGNORECASE)
         else:
-            text = line # No tag? Keep previous voice.
+            # No name found? It's a continuation line.
+            # Keep the SAME voice as before.
+            text = line
+
+        # 3. TEXT FIXES (HK Style)
         
-        # 3. TEXT NORMALIZATION (The HK Fixes)
+        # Fix: % -> "percent" (English pronunciation)
+        text = text.replace("%", " percent ")
         
-        # Fix: Read % as "percentage" (English)
-        text = text.replace("%", " percentage ")
-        
-        # Fix: "Listening" vs "Tomorrow". 
-        # TTS often reads "聽朝" (Ting Ziu) as "Teng Ciu". 
-        # We replace it with "聽日朝早" which forces the correct "Ting" sound.
+        # Fix: 聽朝 -> 聽日朝早 (Fixes "Teng Ciu" misread)
         text = text.replace("聽朝", "聽日朝早")
         
-        # Clean instructions (laughs) etc
-        text = re.sub(r'\(.*?\)', '', text).strip()
+        # Cleanup: Remove instructions like (laughs) or [sigh]
+        text = re.sub(r'[\(\[].*?[\)\]]', '', text).strip()
         
         if len(text) < 1: continue
 
@@ -108,7 +118,7 @@ async def generate_dialogue_audio(script_text, output_file):
                 combined_audio += segment
                 
                 # Pause Logic
-                pause_ms = 450 if len(segment) > 2500 else 250
+                pause_ms = 400 if len(segment) > 2500 else 200
                 combined_audio += AudioSegment.silent(duration=pause_ms)
                 temp_files.append(temp_filename)
         except Exception as e:
@@ -132,7 +142,6 @@ def ensure_bgm():
                 f.write(r.content)
             return True
     except: pass
-    # Fallback
     try:
         url = "https://upload.wikimedia.org/wikipedia/commons/5/5b/Kevin_MacLeod_-_Local_Forecast_-_Elevator.ogg"
         r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
@@ -153,7 +162,7 @@ def mix_music(voice_file, output_file):
 
     try:
         voice = AudioSegment.from_mp3(voice_file)
-        bgm = AudioSegment.from_mp3("bgm.mp3") - 30 # Volume -30dB (Soft)
+        bgm = AudioSegment.from_mp3("bgm.mp3") - 28 # Soft Background
         
         loop_count = len(voice) // len(bgm) + 2
         bgm_looped = bgm * loop_count
@@ -237,14 +246,14 @@ def write_script(hk, gl, tech, we, tr):
     
     **Language & Style:**
     - **Authentic HK Cantonese (廣東話口語)**. 
-    - **VITAL:** When mentioning percentages, write "%". (The reader will handle it).
-    - **VITAL:** Use "percentage" (English) in your mind, but write the symbol %.
-    - **Tone:** - Girl: High energy, uses slang (勁, 癲, 唔係掛), asks "stupid" questions.
+    - **VITAL:** Use "percent" (English) for %. Write % symbol in script.
+    - **Tone:** - Girl: High energy, uses slang (勁, 癲, 唔係掛), asks questions.
        - Boy: Smart, calm, professional explanations.
 
     **Format (Strictly Follow):**
     - Use '|' to separate dialogue. NO NEWLINES.
-    - Format: "Character: Text | Character: Text".
+    - Format: "Name: Text | Name: Text".
+    - Do NOT use asterisks (**Name**) for names. Just plain text.
     
     **Script Sections:**
     1. **Intro:** Quick energetic hello to "香港早晨".

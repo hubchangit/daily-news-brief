@@ -3,45 +3,37 @@
   <channel>
     <title>香港早晨</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>HK News Analysis (Powered by AI).</description>
+    <description>Daily News: HK, Global &amp; Tech.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Fri, 23 Jan 2026 06:44:24 +0000</lastBuildDate>
-    <itunes:author>Tram Girl</itunes:author>
-    <managingEditor>news@ex.com (Tram Girl)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 14:44:24 +0800</pubDate>
+    <lastBuildDate>Fri, 23 Jan 2026 07:32:22 +0000</lastBuildDate>
+    <itunes:author>AI Team</itunes:author>
+    <managingEditor>news@ex.com (AI Team)</managingEditor>
+    <pubDate>Fri, 23 Jan 2026 15:32:22 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
-      <itunes:name>Tram Girl</itunes:name>
+      <itunes:name>AI Team</itunes:name>
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>晨早新聞: 2026-01-23</title>
-      <description><![CDATA[電車少女:嘩！各位觀眾聽眾，大家好呀！電車少女同出木杉又返嚟啦！勁興奮呀今日！
+      <title>香港早晨: 2026-01-23</title>
+      <description><![CDATA[電車少女: 各位香港早晨嘅聽眾，早晨呀！活力充沛嘅電車少女又同大家見面啦！今日同我哋一齊嘅，當然就係我哋嘅知識寶庫，出木杉啦！ 
 
-出木杉:大家好。今日香港受東北季候風影響，普遍多雲，部分時間天色明朗及乾燥。預計明早天氣仍然相當清涼，日間氣溫會回升。星期日風勢較大，之後一兩日就轉為潮濕。
+ 出木杉: 大家好，歡迎收聽香港早晨。  電車少女: 係呀！今日天氣點先？等出木杉話俾大家知！ 
 
-電車少女:嘩，咁即係聽日仲要著多件衫喎！唔係掛，又凍又乾，塊面會裂㗎喎！
+ 出木杉: 今日天氣預測：東北季候風正影響華南。同時，一道廣闊雲帶覆蓋該區。本港地區下午及今晚天氣預測: 大致多雲。下午部分時間天色明朗及乾燥。吹和緩東北風。展望: 明早仍然相當清涼，日間部分時間有陽光，氣溫回升。星期日風勢較大，隨後一兩日較為潮濕。  電車少女: 嘩！今日終於有陽光啦！不過都係咁凍，大家記得著多件衫呀！咁今日有咩熱話先？ 
 
-電車少女:出木杉！你知唔知最近Labubu勁hit呀？Pop Mart啲股票癲咗咁升喎，乜事呀？
+ 出木杉: 今日嘅頭條熱話，係關於潮玩Labubu嘅生產商Pop Mart。佢哋嘅股價呢個禮拜勁升咗 23%，因為佢哋啲潮玩好受歡迎，仲俾官媒點名讚，令投資者信心大增。  電車少女: 嘩！23%！勁呀！我上次去Pop Mart排隊都排到傻，啲Labubu真係好得意！不過點解會突然升咁多㗎？ 
 
-出木杉:嗯，Pop Mart股價確實在這星期內急升了23%，主要是因為公司CEO接受了官媒訪問，市場對其發展前景充滿信心，特別是Labubu這個IP的受歡迎程度。
+ 出木杉: 其實係因為佢哋嘅產品設計新穎，加上市場對潮流玩物需求大增，同埋內地媒體正面報道，令投資者信心大增，所以股價先有咁強勁嘅升幅。  電車少女: 原來係咁！真係潮玩無敵呀！咁香港仲有啲咩新聞呢？ 
 
-電車少女:哇，原來係咁呀！潮物真係可以帶動經濟㗎喎，勁啊！
-
-電車少女:喂，講開又講，廉署又拉人喎，係咪又有大茶飯呀？
-
-出木杉:廉政公署最近拘捕了14人，包括一間上市清潔服務公司的高級經理，涉嫌貪污。這再次提醒我們，香港社會對誠信的要求依然很高。
-
-電車少女:唉，又係呢啲，搞到我都冇晒心機。希望香港可以少啲貪污啦，真係好影響市容㗎！
-
-電車少女:講到經濟，財爺陳茂波話香港經濟冇有怕喎，但又話美國嗰邊啲政策好波動]]></description>
+ 出木杉: 嚟睇下一條本地新聞。有政府資助嘅青年宿舍即將關閉，搞到好多住客都好徬徨，擔心要搬返劏房。  電車少女: 唔係]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 14:44:24 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 15:32:22 +0800</pubDate>
     </item>
   </channel>
 </rss>

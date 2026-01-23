@@ -37,19 +37,17 @@ FEEDS_GLOBAL = [
 FEEDS_TECH = ["https://www.theverge.com/rss/index.xml"]
 
 WEATHER_URL = "https://rss.weather.gov.hk/rss/LocalWeatherForecast_uc.xml"
-
-# CUSTOM BGM URL (From your repo)
 REPO_BGM_URL = "https://github.com/hubchangit/daily-news-brief/raw/main/bgm.mp3"
 
 # 2. AUDIO ENGINE
 # -----------------------------
 async def generate_line(text, voice, filename):
-    # Both voices tuned to 1.2x speed (+20%)
+    # SPEED SETTING: 1.2x (+20%)
     if voice == VOICE_FEMALE:
         rate = "+20%" 
         pitch = "+2Hz"
     else:
-        rate = "+20%" # Tuned up for WanLung too
+        rate = "+20%" 
         pitch = "+0Hz"
         
     communicate = edge_tts.Communicate(text, voice, rate=rate, pitch=pitch)
@@ -58,41 +56,47 @@ async def generate_line(text, voice, filename):
 async def generate_dialogue_audio(script_text, output_file):
     print("Generating Dialogue Audio...")
     
-    # 1. Cleaning: Remove bolding and markdown
+    # 1. Global Clean: Remove bolding/markdown
     clean_text = re.sub(r'\*\*|##', '', script_text)
     lines = clean_text.split("|")
     
     combined_audio = AudioSegment.empty()
     temp_files = []
     
+    # Keep track of last speaker to handle lines without labels
+    current_voice = VOICE_MALE 
+
     for i, line in enumerate(lines):
         line = line.strip()
         if not line: continue
         
-        # 2. Detect Speaker & STRIP NAMES
-        # We use regex to remove "Name:" or "Name：" from the start of the line
-        if "出木杉" in line or "Dekisugi" in line:
-            voice = VOICE_MALE
-            # Remove the name label
-            text = re.sub(r'^(出木杉|Dekisugi)[:：]?', '', line).strip()
-        elif "電車少女" in line or "Tram Girl" in line:
-            voice = VOICE_FEMALE
-            # Remove the name label
-            text = re.sub(r'^(電車少女|Tram Girl)[:：]?', '', line).strip()
+        # 2. STRICT SPEAKER DETECTION
+        # Check if line STARTS with a name.
+        # Matches: "Dekisugi:", "Dekisugi：", "出木杉:", "出木杉："
+        
+        is_male = re.match(r'^\s*(?:出木杉|Dekisugi)\s*[:：]', line)
+        is_female = re.match(r'^\s*(?:電車少女|Tram Girl)\s*[:：]', line)
+        
+        if is_male:
+            current_voice = VOICE_MALE
+            # Strip the name label (Replace "Dekisugi:" with empty string)
+            text = re.sub(r'^\s*(?:出木杉|Dekisugi)\s*[:：]\s*', '', line)
+        elif is_female:
+            current_voice = VOICE_FEMALE
+            text = re.sub(r'^\s*(?:電車少女|Tram Girl)\s*[:：]\s*', '', line)
         else:
-            voice = VOICE_MALE if len(line) > 30 else VOICE_FEMALE
+            # No label found? Continue with the previous voice.
             text = line
             
-        # 3. Final cleanup of instructions (e.g. "(laugh)")
+        # 3. Clean Instructions (e.g., "(laughs)", "(sigh)")
         text = re.sub(r'\(.*?\)', '', text).strip()
         
-        # If text is empty after cleaning, skip it
         if len(text) < 1: continue
 
         temp_filename = f"temp_line_{i}.mp3"
         try:
-            print(f"Speaking ({voice}): {text[:15]}...")
-            await generate_line(text, voice, temp_filename)
+            print(f"Speaking ({current_voice}): {text[:15]}...")
+            await generate_line(text, current_voice, temp_filename)
             
             if os.path.exists(temp_filename):
                 segment = AudioSegment.from_mp3(temp_filename)
@@ -117,8 +121,6 @@ async def generate_dialogue_audio(script_text, output_file):
 def ensure_bgm():
     if os.path.exists("bgm.mp3"): return True
     print("Downloading BGM...")
-    
-    # Try User Repo First
     try:
         print(f"Attempting custom BGM from: {REPO_BGM_URL}")
         r = requests.get(REPO_BGM_URL)
@@ -126,16 +128,14 @@ def ensure_bgm():
             with open("bgm.mp3", "wb") as f:
                 f.write(r.content)
             return True
-    except:
-        print("Custom BGM not found. Trying fallback...")
+    except: pass
 
-    # Fallback to Kevin MacLeod
     try:
         url = "https://upload.wikimedia.org/wikipedia/commons/5/5b/Kevin_MacLeod_-_Local_Forecast_-_Elevator.ogg"
         r = requests.get(url, headers={'User-Agent': 'Mozilla/5.0'})
         with open("bgm.ogg", "wb") as f:
             f.write(r.content)
-        song = AudioSegment.from_ogg("bgm.ogg")[:45000] # 45 sec loop
+        song = AudioSegment.from_ogg("bgm.ogg")[:45000]
         song.export("bgm.mp3", format="mp3")
         os.remove("bgm.ogg")
         return True
@@ -152,7 +152,7 @@ def mix_music(voice_file, output_file):
         voice = AudioSegment.from_mp3(voice_file)
         bgm = AudioSegment.from_mp3("bgm.mp3") 
         
-        # Volume: 30% softer than before (-18dB -> -25dB)
+        # BGM Volume: -25dB (Softer)
         bgm = bgm - 25
         
         loop_count = len(voice) // len(bgm) + 2

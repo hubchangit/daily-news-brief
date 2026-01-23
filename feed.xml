@@ -1,17 +1,17 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
   <channel>
-    <title>香港早晨</title>
+    <title>香港早晨 HK Morning</title>
     <link>https://hubchangit.github.io/daily-news-brief</link>
-    <description>Daily News: HK, Global &amp; Tech.</description>
+    <description>Daily Deep Dive &amp; Tech News. AI Generated.</description>
     <itunes:explicit>no</itunes:explicit>
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Fri, 23 Jan 2026 08:24:54 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 23 Jan 2026 10:21:06 +0000</lastBuildDate>
     <itunes:author>AI Team</itunes:author>
     <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Fri, 23 Jan 2026 16:24:54 +0800</pubDate>
+    <pubDate>Fri, 23 Jan 2026 18:21:06 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -19,37 +19,15 @@
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>香港早晨: 2026-01-23</title>
-      <description><![CDATA[電車少女: 嘩！香港早晨嘅各位聽眾，早晨啊！又係我電車少女同出木杉陪你哋展開新一日啦！勁呀！ 
+      <title>早晨！Deep Dive (01/23)</title>
+      <description><![CDATA[Tram Girl: 今日個AI傻咗呀！
 
- 出木杉: 早晨，各位。 
+Dekisugi: 系統故障，唯有聽日再見。
 
- 電車少女: 今日天氣點呀？我見朝早有啲涼喎。 
-
- 出木杉: 今日天氣方面，東北季候風正影響華南，同時，一道廣闊雲帶覆蓋該區。 
-
- 電車少女: 吓？即係點呀？ 
-
- 出木杉: 簡單講，本港地區今晚及明日會大致多雲。明早市區最低氣溫約14度，新界再低幾度，部分地區會寒冷。 
-
- 電車少女: 嘩，要着多件衫啦！ 
-
- 出木杉: 係。不過日間部分時間會有陽光及乾燥，最高氣溫約19度。吹和緩東北風，漸轉吹東風。 
-
- 電車少女: 聽落都ok吖，唔會好濕。 
-
- 出木杉: 展望星期日風勢較大，隨後一兩日會大致多雲，較為潮濕。大家出門記得留意天氣變化。  電車少女: 喂，出木杉，最近有單新聞真係勁爆！Labubu呢隻嘢紅到癲咗，啲股票仲升到23 percent，你知唔知呀？ 
-
- 出木杉: 當然知道。「Labubu」製造商Pop Mart股價在星期五急升，本周累計升幅達23 percent，主要受惠於新玩具趨勢及官方媒體的關注。這反映了潮流玩具市場的潛力。 
-
- 電車少女: 嘩，23 percent呀！買到就發啦！唔係掛？咁多人都鍾意呢隻公仔咩？ 
-
- 出木杉: 的確，潮流玩具近年在全球範圍內都受到追捧，它的設計、限量發售策略以及收藏價值都是其成功的原因。 
-
- ]]></description>
+]]></description>
       <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3</guid>
       <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260123.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Fri, 23 Jan 2026 16:24:54 +0800</pubDate>
+      <pubDate>Fri, 23 Jan 2026 18:21:06 +0800</pubDate>
     </item>
   </channel>
 </rss>

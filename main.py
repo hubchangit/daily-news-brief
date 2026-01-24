@@ -20,7 +20,7 @@ try:
 except: pass
 
 HKT = timezone(timedelta(hours=8))
-GENERATION_MODEL = "gemini-2.5-flash" # Primary Brain
+GENERATION_MODEL = "gemini-2.5-flash"
 
 # VOICES
 VOICE_GIRL = "zh-HK-HiuGaaiNeural" 
@@ -65,13 +65,11 @@ def run_janitor():
     now_hk = datetime.now(HKT)
     todays_file = f"brief_{now_hk.strftime('%Y%m%d')}.mp3"
     
-    # Remove old mp3s that aren't today's final output
     for f in glob.glob("*.mp3"):
         if f != todays_file and not f.startswith("asset_"):
             try: os.remove(f)
             except: pass
             
-    # Remove temp download files
     for p in ["temp_*.mp3", "temp.ogg", "dialogue_raw.mp3"]:
         for f in glob.glob(p):
             try: os.remove(f)
@@ -81,27 +79,45 @@ def run_janitor():
 # -----------------------------
 def download_asset(name, url):
     fname = f"asset_{name}.mp3"
-    if os.path.exists(fname): return fname
+    if os.path.exists(fname) and os.path.getsize(fname) > 1000: 
+        return fname
     
     print(f"📥 Downloading {name}...")
     try:
-        r = requests.get(url, headers={'User-Agent': 'Bot'})
+        # Improved Headers to prevent 403 Forbidden
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+        }
+        r = requests.get(url, headers=headers, timeout=10)
+        
+        if r.status_code != 200:
+            print(f"⚠️ Failed to download {name}: Status {r.status_code}")
+            return None
+
         with open("temp.ogg", "wb") as f: f.write(r.content)
-        seg = AudioSegment.from_ogg("temp.ogg")
+        
+        try:
+            seg = AudioSegment.from_file("temp.ogg") # Let pydub auto-detect format
+        except:
+            print(f"⚠️ Failed to decode {name}")
+            return None
+
         seg = seg.normalize()
         
         # Adjust BGM volume
-        if name == "bgm": seg = seg - 25 
+        if name == "bgm": seg = seg - 35 
         
         seg.export(fname, format="mp3")
         os.remove("temp.ogg")
         return fname
     except Exception as e:
         print(f"⚠️ Asset {name} failed: {e}")
+        if os.path.exists("temp.ogg"): os.remove("temp.ogg")
         return None
 
 def prepare_assets():
     assets = {}
+    
     # 1. Try Custom BGM
     try:
         if not os.path.exists("asset_bgm.mp3"):
@@ -114,7 +130,9 @@ def prepare_assets():
     # 2. Download defaults
     for k, v in ASSETS.items():
         if k not in assets:
-            assets[k] = download_asset(k, v)
+            path = download_asset(k, v)
+            if path: assets[k] = path
+            
     return assets
 
 # 4. CONTENT BRAIN
@@ -137,39 +155,20 @@ def get_rss_content(urls, limit=3):
     return text
 
 def clean_text_for_tts(text):
-    """
-    The Normalizer: Fixes symbols BEFORE audio generation.
-    """
     if not text: return ""
-    
-    # 1. Percentages
     text = text.replace("%", " percent ")
-    
-    # 2. Currency
-    text = text.replace("HKD", "港幣")
-    text = text.replace("HK$", "港幣")
+    text = text.replace("HKD", "港幣").replace("HK$", "港幣")
     text = re.sub(r'\$(\d+)', r'\1蚊', text) 
-    
-    # 3. Dates
     text = re.sub(r'Jan (\d+)', r'1月\1號', text)
     text = re.sub(r'Feb (\d+)', r'2月\1號', text)
-    
-    # 4. HK Pronunciation
     text = text.replace("聽朝", "聽日朝早") 
-    
-    # 5. Clean Markdown
     text = re.sub(r'\*\*|__|##', '', text)
-    
     return text.strip()
 
 def extract_json_from_text(text):
-    """Helper to pull JSON out of markdown code blocks"""
     try:
-        # Find JSON between ```json and ```
         match = re.search(r'```json\n(.*?)\n```', text, re.DOTALL)
-        if match:
-            return json.loads(match.group(1))
-        # Or just find the first { and last }
+        if match: return json.loads(match.group(1))
         start = text.find('{')
         end = text.rfind('}') + 1
         return json.loads(text[start:end])
@@ -189,12 +188,17 @@ def generate_script_json(hk, gl, tech, we, tr):
     Weather: {we}
 
     **CHARACTERS:**
-    1. **Tram Girl (girl):** Energetic but hates mornings. Loves food. Uses HK Slang (e.g. 癲, 世一, 唔係掛).
-    2. **Dekisugi (boy):** Calm, data-driven, polite. Corrects the girl's logic.
+    1. **妹豬 (girl):** Energetic, informal, loves food. *KEY RULE:* Always use HK Slang (e.g. 癲, 世一, 唔係掛).
+    2. **哥哥 (boy):** Calm, data-driven, polite. He corrects 妹豬's logic with facts.
+
+    **LANGUAGE RULES (CRITICAL):**
+    - **NO 書面語 (Written Chinese).**
+    - **MUST USE 廣東話口語 (Colloquial Cantonese).**
+    - Examples: Use "嘅" instead of "的", "係" instead of "是", "佢" instead of "他", "咁" instead of "那麼".
 
     **STRUCTURE:**
-    1. **Intro:** Girl complains about humidity/hunger. Boy introduces show.
-    2. **Deep Dive (HK):** Pick ONE major story. Boy explains details. Girl asks questions.
+    1. **Intro:** 妹豬 complains about humidity/hunger. 哥哥 introduces show.
+    2. **Deep Dive (HK):** Pick 2-3 major story. 哥哥 explains details. 妹豬 asks simple questions.
     3. **Global Headlines:** 2-3 quick stories.
     4. **Tech:** One cool innovation.
     5. **Outro:** "See you tomorrow!" (Use 聽日).
@@ -211,7 +215,6 @@ def generate_script_json(hk, gl, tech, we, tr):
     *Valid speakers: "girl", "boy", "sfx".*
     """
     
-    # 1. Try Gemini
     print(f"🤖 Brain active: {GENERATION_MODEL}...")
     try:
         model = genai.GenerativeModel(GENERATION_MODEL)
@@ -220,7 +223,6 @@ def generate_script_json(hk, gl, tech, we, tr):
     except Exception as e:
         print(f"⚠️ Gemini Failed: {e}")
 
-    # 2. Fallback: Hugging Face
     print("🚨 Activating Fallback: Hugging Face (Qwen)...")
     try:
         client = InferenceClient(api_key=os.environ["HF_TOKEN"])
@@ -276,8 +278,13 @@ async def build_audio(script_data, assets, output_file):
             if sfx_type == "intro": asset_name = "sfx_intro"
             if sfx_type == "tech": asset_name = "sfx_tech"
             
-            if asset_name in assets:
-                segments.append(AudioSegment.from_mp3(assets[asset_name]))
+            # SAFEGUARD: Only use SFX if download succeeded
+            if asset_name in assets and assets[asset_name]:
+                try:
+                    sfx = AudioSegment.from_mp3(assets[asset_name])
+                    segments.append(sfx)
+                except Exception as e:
+                    print(f"⚠️ Failed to load SFX {asset_name}: {e}")
             continue
             
         # --- VOICE ---
@@ -293,7 +300,6 @@ async def build_audio(script_data, assets, output_file):
             await synthesize_segment(text, voice, fname)
             seg = AudioSegment.from_mp3(fname)
             
-            # Flow Pauses
             pause_ms = 300
             if "?" in text: pause_ms = 500 
             if len(text) > 40: pause_ms = 600
@@ -307,12 +313,16 @@ async def build_audio(script_data, assets, output_file):
     
     # Mix BGM
     print("🎚️ Mixing...")
-    if "bgm" in assets:
-        bgm = AudioSegment.from_mp3(assets["bgm"])
-        loops = len(full_track) // len(bgm) + 2
-        bgm_long = bgm * loops
-        bgm_final = bgm_long[:len(full_track) + 3000].fade_out(2000)
-        final_mix = bgm_final.overlay(full_track, position=500)
+    if "bgm" in assets and assets["bgm"]:
+        try:
+            bgm = AudioSegment.from_mp3(assets["bgm"])
+            loops = len(full_track) // len(bgm) + 2
+            bgm_long = bgm * loops
+            bgm_final = bgm_long[:len(full_track) + 3000].fade_out(2000)
+            final_mix = bgm_final.overlay(full_track, position=500)
+        except Exception as e:
+            print(f"⚠️ BGM mix failed: {e}")
+            final_mix = full_track
     else:
         final_mix = full_track
 
@@ -327,7 +337,7 @@ def update_rss(audio_file, script_json):
     summary = ""
     for line in script_json.get("dialogue", []):
         if line.get("speaker") in ["girl", "boy"]:
-            name = "Tram Girl" if line.get("speaker") == "girl" else "Dekisugi"
+            name = "妹豬" if line.get("speaker") == "girl" else "哥哥"
             summary += f"{name}: {line.get('text')}\n\n"
             
     p = Podcast(

@@ -105,7 +105,7 @@ def download_asset(name, url):
         seg = seg.normalize()
         
         # Adjust BGM volume
-        if name == "bgm": seg = seg - 35 
+        if name == "bgm": seg = seg - 50 
         
         seg.export(fname, format="mp3")
         os.remove("temp.ogg")
@@ -198,8 +198,8 @@ def generate_script_json(hk, gl, tech, we, tr):
 
     **STRUCTURE:**
     1. **Intro:** 妹豬 complains about humidity/hunger. 哥哥 introduces show.
-    2. **Deep Dive (HK):** Pick 2-3 major story. 哥哥 explains details. 妹豬 asks simple questions.
-    3. **Global Headlines:** 2-3 quick stories.
+    2. **Deep Dive (HK):** Pick 3 major news. 哥哥 explains details. 妹豬 asks simple questions.
+    3. **Global Headlines:** 5 quick news.
     4. **Tech:** One cool innovation.
     5. **Outro:** "See you tomorrow!" (Use 聽日).
 

@@ -316,6 +316,7 @@ async def build_audio(script_data, assets, output_file):
     if "bgm" in assets and assets["bgm"]:
         try:
             bgm = AudioSegment.from_mp3(assets["bgm"])
+            bgm = bgm - 10
             loops = len(full_track) // len(bgm) + 2
             bgm_long = bgm * loops
             bgm_final = bgm_long[:len(full_track) + 3000].fade_out(2000)

@@ -155,14 +155,26 @@ def get_rss_content(urls, limit=3):
     return text
 
 def clean_text_for_tts(text):
+    
     if not text: return ""
+    # 1. Percentages
     text = text.replace("%", " percent ")
+    
+    # 2. Currency (Handle 'HK$' and '$')
     text = text.replace("HKD", "港幣").replace("HK$", "港幣")
-    text = re.sub(r'\$(\d+)', r'\1蚊', text) 
-    text = re.sub(r'Jan (\d+)', r'1月\1號', text)
-    text = re.sub(r'Feb (\d+)', r'2月\1號', text)
+    # Matches $ followed by numbers, optional decimals
+    text = re.sub(r'\$(\d+(?:\.\d+)?)', r'\1蚊', text) 
+    
+    # 3. Dates (Add full month names if needed, or keep simple)
+    text = re.sub(r'(?:Jan|January)\s*(\d+)', r'1月\1號', text, flags=re.IGNORECASE)
+    text = re.sub(r'(?:Feb|February)\s*(\d+)', r'2月\1號', text, flags=re.IGNORECASE)
+    
+    # 4. HK Pronunciation
     text = text.replace("聽朝", "聽日朝早") 
+    
+    # 5. Clean Markdown
     text = re.sub(r'\*\*|__|##', '', text)
+    
     return text.strip()
 
 def extract_json_from_text(text):
@@ -177,6 +189,7 @@ def extract_json_from_text(text):
 
 def generate_script_json(hk, gl, tech, we, tr):
     prompt = f"""
+    current_date = datetime.now(HKT).strftime('%Y-%m-%d')
     You are the Producer of "香港早晨" (HK Morning).
     Generate a JSON script.
     
@@ -316,7 +329,7 @@ async def build_audio(script_data, assets, output_file):
     if "bgm" in assets and assets["bgm"]:
         try:
             bgm = AudioSegment.from_mp3(assets["bgm"])
-            bgm = bgm - 10
+            bgm = bgm - 50
             loops = len(full_track) // len(bgm) + 2
             bgm_long = bgm * loops
             bgm_final = bgm_long[:len(full_track) + 3000].fade_out(2000)

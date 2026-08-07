@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Wed, 05 Aug 2026 23:18:35 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 07 Aug 2026 01:35:34 +0000</lastBuildDate>
     <itunes:author>AI Team</itunes:author>
     <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Thu, 06 Aug 2026 07:18:35 +0800</pubDate>
+    <pubDate>Fri, 07 Aug 2026 09:35:34 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -19,43 +19,53 @@
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>早晨！Deep Dive (08/06)</title>
-      <description><![CDATA[妹豬: 嘩！今日濕到癲咗，痴立立咁好唔舒服！最慘係，我個肚打緊鼓呀！哥哥你有冇早餐食呀？
+      <title>早晨！Deep Dive (08/07)</title>
+      <description><![CDATA[妹豬: 嘩！今日個天好焗呀，一出門口就濕晒，搞到我個頭都扁晒喇！又肚餓...
 
-哥哥: 早晨妹豬，唔好咁緊張住，未食早餐可以陣間再食。各位觀眾，早晨！歡迎收睇《香港早晨》。今日係香港天文台2026年8月6號發出嘅天氣報告，話廣東沿岸風勢微弱，天色普遍晴朗，不過海南島附近有低壓區，會帶嚟不穩定天氣。同時，要留意熱帶風暴鯨魚同強颱風白海豚嘅動向。
+哥哥: 早晨啊各位觀眾，歡迎收睇《香港早晨》。妹豬又話肚餓喇？今日係2026年8月7號星期五。
 
-哥哥: 首先嚟睇睇今日香港嘅重點新聞。第一單，一對香港母子，喺新加坡樟宜機場因為同職員發生衝突，俾當地法庭判咗監，最高可以坐六個月。真係為咗一場衝突，付出咁大代價，太唔值得啦。
+哥哥: 天文台話今日廣東沿岸風勢微弱，天色普遍晴朗，預計最高氣溫大約31度，出街記得帶遮。不過要留意，強颱風「白海豚」正集結喺沖繩島東北面，大家要密切留意佢嘅路徑。
 
-妹豬: 嘩，坐監呀？為咗嘈交要坐監，唔係掛！好癲呀！
+哥哥: 首先我哋嚟睇吓香港嘅焦點新聞。最近有人批評香港嘅經濟發展同法治基礎係無根據嘅。政府就回應話，呢啲批評都係一派胡言，係完全 baseless 嘅。
 
-哥哥: 第二單要講嘅係，有香港立法會議員警告，一個喺越南嘅咖啡投資加密貨幣騙局，即係『Fun Coffee』，懷疑已經呃咗超過一千個受害者，損失仲越嚟越大。大家真係要小心，呢啲投資真係要睇清楚。
+妹豬: 吓？咁都得？邊個話㗎？香港世一喎！批評香港簡直係癲㗎嘛！
 
-妹豬: 吓，咖啡都有得呃人？加密貨幣真係好危險！世上冇免費午餐㗎嘛！
+哥哥: 係呀，妹豬。政府就係強調香港嘅獨特優勢，話法治基石依然穩固。另外，講到香港想做全球科技中心，但點樣留住年輕人才呢？好似18歲嘅Rexan Wong同Ken Mochizuki咁，佢哋都好有諗頭，但佢哋會唔會留喺香港發展呢？
 
-哥哥: 最後一單本地新聞，香港應該做企業嘅『超級夥伴』，幫助佢哋拓展海外市場，好似東盟、中東、中亞同歐洲咁。仲可以建立供應鏈，鞏固返香港嘅角色。
+妹豬: 嘩，咁細個就創業，好癲呀！不過香港租又貴，競爭又大，真係好難留人喎！
 
-妹豬: 超級夥伴？聽落好似好勁咁喎！即係幫手搵錢啦！咁我哋又可以多啲嘢食啦！
+哥哥: 呢個就係重點喇。專家話要提供更多支援同機會，先至可以令年輕人留喺度發展。另外，金價潛力被分析師形容為「爆炸性」！隨著亞洲多國央行囤積黃金，香港亦希望成為黃金交易中心。
 
-哥哥: 接住落嚟，我哋一齊睇吓國際新聞嘅焦點。首先，伊朗話佢哋同阿曼就霍爾木茲海峽嘅航運路線達成咗協議，細節就未公開，但講緊係最後階段啦。
+妹豬: 金價爆炸性？唔係掛？我得幾千蚊儲蓄咋喎，買唔買得起金呀？我餐蛋麵都食唔起啦！
 
-哥哥: 第二，烏克蘭警告話，基輔俾人空襲之後，因為攔截導彈嘅短缺，搞到好多人死傷。冇咗愛國者導彈，佢哋嘅天空就完全暴露晒。
+哥哥: 妹豬，呢個係講緊大趨勢同埋香港點樣把握機會。金價走勢強勁，對香港作為交易中心係一個好大嘅機遇嚟。好，講完香港，我哋即刻睇吓環球速遞。
 
-哥哥: 第三，德國機場發現有載住爆炸品嘅無人機，警方話係喺烏克蘭貨機附近搵到，之後仲有另一個物體撞到貨機。
+哥哥: 美國前總統特朗普否認美國武器短缺，仲話會追查洩密者。
 
-妹豬: 嘩，爆炸品無人機？好危險呀！個世界真係好亂！
+哥哥: Meta因為兒童安全問題，被新墨西哥州法官判罰款5.67億美元，係社交媒體界最大嘅一次罰款。
 
-哥哥: 嚟到科技環節，今個禮拜有一樣好抵玩嘅嘢。Ring有兩款最新嘅視像門鐘，即係Wired Doorbell Pro同Battery Doorbell Plus，依家做緊特價，平咗好多呀。如果大家想屋企多啲保障，或者想方便啲，就值得考慮吓。
+哥哥: 歐洲足協表示，可能仲會繼續抵制，因為英格蘭足總已經撤回咗對國際足協主席因凡蒂諾嘅支持。
 
-妹豬: 視像門鐘？即係可以手機睇到邊個撳門鐘嗰隻？嘩，咁咪唔怕開錯門俾陌生人囉？呢個真係好實用喎，仲要抵買！係咪真係平好多㗎？
+哥哥: 轉個頭我哋睇吓科技新搞作。
 
-哥哥: 時間過得真係快，又到咗同大家講拜拜嘅時候。多謝大家收睇《香港早晨》。
+哥哥: 講到科技界，前Apple設計師Jony Ive同OpenAI合作研發嘅AI裝置，據報係一個手球咁大、無屏幕嘅智能喇叭，真係好神秘！
 
-妹豬: 咁快就完啦？我都未食飽呀！不過都係要講聲，聽日見啦大家！
+妹豬: 嘩！無屏幕嘅智能喇叭？咁點玩㗎？咪好似Siri咁齋講嘢囉？不過Jony Ive設計嘅嘢，實靚到癲啦！
+
+哥哥: 佢係想簡化人機互動，將重點放喺語音同AI嘅配合度上面，呢個設計概念都幾大膽。另外，Google嘅Pixel 11發佈會，今次竟然請咗Trevor Noah嚟做主持，都幾特別。
+
+妹豬: 時間過得真係快，又到要講Bye Bye嘅時候喇。我個早餐都仲未食呀！
+
+哥哥: 係呀，多謝各位收睇《香港早晨》。
+
+妹豬: 聽日記得再見喇！
+
+哥哥: 聽日同一時間再見。
 
 ]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260806.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260806.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Thu, 06 Aug 2026 07:18:35 +0800</pubDate>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20260807.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20260807.mp3" length="9000000" type="audio/mpeg"/>
+      <pubDate>Fri, 07 Aug 2026 09:35:34 +0800</pubDate>
     </item>
   </channel>
 </rss>

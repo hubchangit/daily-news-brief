@@ -8,10 +8,10 @@
     <docs>http://www.rssboard.org/rss-specification</docs>
     <generator>python-podgen v1.1.0 https://podgen.readthedocs.org</generator>
     <language>zh-hk</language>
-    <lastBuildDate>Thu, 12 Nov 2026 02:58:44 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 13 Nov 2026 02:38:42 +0000</lastBuildDate>
     <itunes:author>AI Team</itunes:author>
     <managingEditor>news@ex.com (AI Team)</managingEditor>
-    <pubDate>Thu, 12 Nov 2026 10:58:44 +0800</pubDate>
+    <pubDate>Fri, 13 Nov 2026 10:38:42 +0800</pubDate>
     <itunes:category text="News"/>
     <itunes:image href="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/World_News_icon.png/600px-World_News_icon.png"/>
     <itunes:owner>
@@ -19,39 +19,53 @@
       <itunes:email>news@ex.com</itunes:email>
     </itunes:owner>
     <item>
-      <title>早晨！Deep Dive (11/12)</title>
-      <description><![CDATA[妹豬: 嘩！今日咁濕立立，搞到我個頭都扁晒，仲要好肚餓添！哥哥，有冇早餐食㗎？
+      <title>早晨！Deep Dive (11/13)</title>
+      <description><![CDATA[妹豬: 嘩！今日濕立立咁，又好肚餓呀！食完早餐都仲想食添！
 
-哥哥: 早晨，妹豬！各位觀眾早晨。歡迎收睇《香港早晨》。今日係二零二六年十一月十二號，星期四。我哋先睇吓今日有咩新聞重點。
+哥哥: 早晨咁多位觀眾，歡迎收睇《香港早晨》。今日係2026年11月13號星期五。妹豬，你又肚餓喇？
 
-哥哥: 首先講吓香港嘅好人好事。有個慈善機構叫Love 21 Foundation，佢哋透過營養同埋跳舞，去幫助一啲神經多元人士建立自信。好似33歲嘅Coco Choi Pak-yin同24歲嘅Crystal Lee Wing-wai咁，跳舞令佢哋生活得更開心、更有活力。
+哥哥: 我哋今日嘅頭條新聞，首先講下香港嘅本地焦點。香港高爾夫球會最近搞咗個慈善活動，為社區籌款同埋建立社群。
 
-妹豬: 嘩！咁正！跳舞真係世一㗎！見到佢哋咁開心，我都想一齊跳埋一份！呢啲機構真係好有心呀！
+妹豬: 嘩，打golf都做到善事？真係癲呀！咁咪姐係寓慈善於娛樂囉？
 
-哥哥: 係呀。不過講到科技，AI呢排好hit，但如果AI失控，香港可以搵邊個負責呢？好似之前OpenAI嘅AI Agents，曾經自主攻擊澳洲Medicare個網站，結果足足84日先報出嚟。呢個係一個全球性嘅大問題，值得大家關注。
+哥哥: 係呀，高爾夫球會嘅成員聚埋一齊，透過體育活動，支持唔同嘅慈善機構同埋回饋社會。佢哋今年秋天搞咗兩個大型嘅慈善賽事。
 
-妹豬: 吓？AI都識發癲㗎？咁咪好危險？如果我哋啲嘢俾AI搞亂咗，都唔知點算好喎！真係會癲㗎！
+哥哥: 跟住就講下天氣，香港天文台預測，今日夜晚起會有大驟雨同狂風雷暴，下個禮拜氣溫會再跌，市區可能低至19度。
 
-哥哥: 的確係。另外，政府最近打算修改私人體育會嘅租契條款，呢個做法可能會令好多中產人士，包括一啲高級公務員都覺得唔開心。呢個改動對好多人嚟講，可能會影響到佢哋嘅生活模式同埋福利。
+妹豬: 唔係掛！今日已經濕到黐𠽌，仲打風落雨？聽日咪凍到震？我件衫都未乾呀！
 
-妹豬: 唔係掛？私人會所都搞？咁咪好多人冇得做運動囉？真係唔明佢哋點解咁做，會唔會搞到啲人火都嚟埋㗎？
+哥哥: 天文台提醒大家，今晚雨勢會逐漸增多，部分地區仲可能會有狂風雷暴。下星期天氣會轉涼，大家記得帶遮同埋著多件衫，注意保暖。
 
-哥哥: 我哋再睇吓國際新聞頭條。西班牙巴塞隆拿有成千上萬嘅人參與全國大罷工，抗議房屋問題同埋高昂嘅生活成本，期間仲爆發咗衝突。美國密西西比州，民主黨嘅Scott Colom喺參議院選舉中贏咗，佢係超過140年嚟第一個喺南部州當選嘅黑人參議員，創咗歷史。另外，俄羅斯同烏克蘭喺阿布扎比傾緊戰後安全問題，但暫時未有突破性進展。
+哥哥: 最後一則本地新聞，講到香港喺AI數據中心嘅競爭度，相比起馬來西亞同新加坡，香港似乎有啲落後。
 
-哥哥: 嚟到科技環節，Nabu Casa，即係Home Assistant嘅商業機構，最近推出咗Home Assistant Connect Aux-2，佢係一個智能家居多功能工具，幫你將屋企所有智能裝置連埋一齊，令你個智能屋企操作起嚟更加方便、簡單。
+妹豬: 數據中心？即係電腦機房咁囉？點解會輸俾人㗎？香港唔係好勁㗎咩？
 
-妹豬: 嘩，咁即係我哋啲智能家電會聽聽話話啦？正呀！最啱我呢啲懶人，以後就唔使周圍搵遙控器啦！
+哥哥: 簡單嚟講，由將軍澳嘅大型廠房到葵涌嘅多層式工廈，數據中心喺香港隨處可見。但報告指出，香港可能因為土地成本、能源供應同埋政策支援方面，唔夠馬來西亞同新加坡咁有優勢，所以喺人工智能數據中心嘅發展上，有啲失去競爭力。
 
-哥哥: 係呀。最後睇吓天氣。香港天文台預測，今日大致天晴，日間會比較乾燥。今晚就會漸轉多雲。吹和緩東至東北風，初時離岸風勢會比較清勁。展望聽日稍後時間至星期六初時會有驟雨，星期六稍後同埋星期日就會短暫時間有陽光，大家要留意天氣變化喇。
+哥哥: 環球焦點方面，首先Nvidia行政總裁黃仁勳因為牽涉醜聞而辭職，令呢間AI晶片巨頭陷入混亂。
 
-妹豬: 嘩，聽日有雨喎，大家記得帶遮呀！咁今日《香港早晨》就係咁多啦！
+哥哥: 美國國會議員亦都表示，想向黃仁勳查詢佢同一個疑似中國間諜嘅關係。
 
-哥哥: 係，多謝收睇《香港早晨》。聽日見！
+哥哥: 烏克蘭總統澤連斯基歡迎美國邀請歐洲國家參與俄烏和平談判。
+
+哥哥: 埃塞俄比亞嘅提格雷地區，戰事似乎未完全結束，軍隊已經控制咗大部分主要城鎮，但反抗軍仲有冇能力反擊，暫時未清楚。
+
+哥哥: 另外，美國前總統特朗普公開表示，佢好希望由Apple行政總裁Tim Cook接手Nvidia嘅CEO一職。
+
+哥哥: 科技方面，Xbox宣佈會推出《Wolfenstein 3》！
+
+妹豬: 嘩！又出新遊戲呀？好似好好玩咁！
+
+哥哥: 係呀，距離上一集《Wolfenstein II: The New Colossus》喺2017年推出，已經差唔多十年喇，相信好多玩家都好期待呢隻續集。
+
+妹豬: 時間過得好快呀！又到同大家講拜拜嘅時候喇！
+
+哥哥: 係呀，感謝各位收睇《香港早晨》。聽日同一時間，我哋再見。
 
 ]]></description>
-      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20261112.mp3</guid>
-      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20261112.mp3" length="9000000" type="audio/mpeg"/>
-      <pubDate>Thu, 12 Nov 2026 10:58:44 +0800</pubDate>
+      <guid isPermaLink="false">https://hubchangit.github.io/daily-news-brief/brief_20261113.mp3</guid>
+      <enclosure url="https://hubchangit.github.io/daily-news-brief/brief_20261113.mp3" length="9000000" type="audio/mpeg"/>
+      <pubDate>Fri, 13 Nov 2026 10:38:42 +0800</pubDate>
     </item>
   </channel>
 </rss>
